@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lp_ests/components/nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,12 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
@@ -29,8 +27,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Here we go!")),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff125B50),
+        title: const Text("LPESTS"),
+      ),
+      body: const Center(child: Text("Here we go!")),
+      bottomNavigationBar:const NavBar(),
     );
   }
 }

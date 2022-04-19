@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/components/nav_bar.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import '../components/g_buttons.dart';
+import '../constants/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,15 +27,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _index = 0;
+  PageController controller = PageController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff125B50),
-        title: const Text("LPESTS"),
+        title: text[_index],
+        centerTitle: true,
       ),
-      body: const Center(child: Text("Here we go!")),
-      bottomNavigationBar:const NavBar(),
+      body: PageView.builder(
+          itemCount: pages.length,
+          controller: controller,
+          onPageChanged: (page) {
+            setState(() {
+              _index = page;
+            });
+          },
+          itemBuilder: (context, position) {
+            return pages[position];
+          }),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        child: GNav(
+            selectedIndex: _index,
+            onTabChange: (index) {
+              setState(() {
+                _index = index;
+              });
+              controller.jumpToPage(index);
+            },
+            padding: const EdgeInsets.all(16),
+            tabBackgroundColor: const Color(0xffEEEEEE),
+            backgroundColor: const Color(0xffFAF5E4),
+            activeColor: const Color(0xffF8B400),
+            color: const Color(0xff125B50),
+            gap: 5,
+            tabs: tabs),
+      ),
     );
   }
 }

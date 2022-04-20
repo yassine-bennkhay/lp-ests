@@ -2,7 +2,7 @@
 
 import '../screens/accueil.dart';
 import '../screens/apply.dart';
-import '../screens/filiers.dart';
+import '../screens/filiers/filiers.dart';
 import '../screens/profile.dart';
 final List<Widget> pages = [
     const Accueil(),

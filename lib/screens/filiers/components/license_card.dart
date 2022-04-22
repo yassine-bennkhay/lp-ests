@@ -20,30 +20,28 @@ class LicenseCard extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(kDefaultPaddin),
-              // For  demo we use fixed height  and width
-              // Now we dont need them
-              // height: 180,
-              // width: 160,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: const Color(0xffA54F25),
                 borderRadius: BorderRadius.circular(16),
               ),
-              // child: Hero(
-              //   tag: "${license.id}",
-              //   child: Image.asset(product.image),
-              // ),
+              child: Hero(
+                tag: license.id,
+                child: Image.asset(
+                  license.img,
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-            child: Text(
-              // products is out demo list
-              license.name,
-              style: const TextStyle(color: kTextLightColor),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+          //   child: Text(
+          //     // products is out demo list
+          //     license.id,
+          //     style: const TextStyle(color: kTextLightColor),
+          //   ),
+          // ),
           Text(
-            "\$${license.name}",
+            license.name,
             style: const TextStyle(fontWeight: FontWeight.bold),
           )
         ],

@@ -11,8 +11,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // each product have a color
-      backgroundColor: Colors.green,
+      backgroundColor: const Color(0xffA54F25),
       appBar: buildAppBar(context),
       body: Body(license: license),
     );
@@ -21,7 +20,7 @@ class DetailsScreen extends StatelessWidget {
   AppBar buildAppBar(BuildContext context) {
     var kDefaultPaddin2 = kDefaultPaddin;
     return AppBar(
-      backgroundColor: Colors.green,
+      backgroundColor: const Color(0xffA54F25),
       elevation: 0,
       // leading: IconButton(
       //   icon: SvgPicture.asset(
@@ -30,17 +29,6 @@ class DetailsScreen extends StatelessWidget {
       //   ),
       //   onPressed: () => Navigator.pop(context),
       // ),
-      actions: <Widget>[
-        // IconButton(
-        //   icon: SvgPicture.asset("assets/icons/search.svg"),
-        //   onPressed: () {},
-        // ),
-        // IconButton(
-        //   icon: SvgPicture.asset("assets/icons/cart.svg"),
-        //   onPressed: () {},
-        // ),
-        SizedBox(width: kDefaultPaddin2 / 2)
-      ],
     );
   }
 }

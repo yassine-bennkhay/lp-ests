@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lp_ests/models/licenses.dart';
 
-
 import '../../../../constants/constants.dart';
-
 
 class LicenseTitleAndImage extends StatelessWidget {
   const LicenseTitleAndImage({
-  
     required this.license,
-  }); 
+  });
 
   final License license;
 
@@ -20,10 +17,6 @@ class LicenseTitleAndImage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
-            "Aristocratic Hand Bag",
-            style: TextStyle(color: Colors.white),
-          ),
           Text(
             license.name,
             style: Theme.of(context)
@@ -31,33 +24,29 @@ class LicenseTitleAndImage extends StatelessWidget {
                 .headline4
                 ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
+          Hero(
+            tag: "${license.id}",
+            child: Image.asset(
+              license.img,
+              fit: BoxFit.fill,
+            ),
+          ),
           const SizedBox(height: kDefaultPaddin),
-          Row(
-            children: <Widget>[
-              RichText(
-                text: TextSpan(
-                  children: [
-                    const TextSpan(text: "Price\n"),
-                    TextSpan(
-                      text: "\$${license.name}",
-                      style: Theme.of(context).textTheme.headline4?.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: kDefaultPaddin),
-              // Expanded(
-              //   child: Hero(
-              //     tag: "${license.id}",
-              //     child: Image.asset(
-              //       product.image,
-              //       fit: BoxFit.fill,
-              //     ),
-              //   ),
-              // )
-            ],
-          )
+          // Row(
+          //   children: const <Widget>[
+          //     // RichText(
+          //     //   text: TextSpan(
+          //     //     children: [
+          //     //       TextSpan(
+          //     //         text: license.name,
+          //     //         style: Theme.of(context).textTheme.headline4?.copyWith(
+          //     //             color: Colors.white, fontWeight: FontWeight.bold),
+          //     //       ),
+          //     //     ],
+          //     //   ),
+          //     // ),
+          //   ],
+          // )
         ],
       ),
     );

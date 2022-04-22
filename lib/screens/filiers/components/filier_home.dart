@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lp_ests/models/licenses.dart';
-import 'package:lp_ests/screens/filiers/components/filierCard.dart';
+import 'package:lp_ests/screens/filiers/components/license_card.dart';
 import 'package:lp_ests/screens/filiers/details/details_screen.dart';
 
 import '../../../constants/constants.dart';
@@ -14,7 +14,7 @@ class FilierHome extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
           child: Text(
-            "Licenses Pro",
+            "Les licenses professionnelles",
             style: Theme.of(context)
                 .textTheme
                 .headline5

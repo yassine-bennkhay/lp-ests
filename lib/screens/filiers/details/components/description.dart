@@ -14,11 +14,9 @@ class Description extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
-      child: SingleChildScrollView(
-        child: Text(
-          license.description,
-          style: const TextStyle(height: 1.5),
-        ),
+      child: Text(
+        license.description,
+        style: const TextStyle(height: 1.5),
       ),
     );
   }

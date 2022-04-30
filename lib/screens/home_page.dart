@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
-          backgroundColor: const Color(0xffC4DDFF),
+          backgroundColor: const Color(0xff06113C),
           title: text[_index],
           centerTitle: true,
           // shape: const RoundedRectangleBorder(
@@ -56,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             padding: const EdgeInsets.all(12),
             tabBorderRadius: 10,
+            backgroundColor: const Color(0xffDDDDDD),
             tabBackgroundColor: const Color(0xffEEEEEE),
             activeColor: const Color(0xff545454),
             color: const Color(0xff000000),

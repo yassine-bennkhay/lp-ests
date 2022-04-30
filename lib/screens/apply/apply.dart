@@ -21,37 +21,43 @@ class _ApplyState extends State<Apply> {
           state: _activeStepIndex <= 0 ? StepState.editing : StepState.complete,
           isActive: _activeStepIndex >= 0,
           title: const Text('Les informations personelles'),
-          content: Column(
-            children: [
-              TextField( 
-                controller: name,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Full Name',
+          content: Padding(
+            padding: const EdgeInsets.only(
+              top: 4,
+              left: 8,
+            ),
+            child: Column(
+              children: [
+                TextField(
+                  controller: name,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Full Name',
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: email,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: pass,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+                TextField(
+                  controller: email,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 8,
+                ),
+                TextField(
+                  controller: pass,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Step(
@@ -103,71 +109,66 @@ class _ApplyState extends State<Apply> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Stepper'),
-      ),
-      body: Stepper(
-        type: StepperType.horizontal,
-        currentStep: _activeStepIndex,
-        steps: stepList(),
-        onStepContinue: () {
-          if (_activeStepIndex < (stepList().length - 1)) {
-            setState(() {
-              _activeStepIndex += 1;
-            });
-          } else {
-            print('Submited');
-          }
-        },
-        onStepCancel: () {
-          if (_activeStepIndex == 0) {
-            return;
-          }
+      backgroundColor: const Color(0xffF1F2F7),
+      body: Theme(
+        data: ThemeData(
+          colorScheme: Theme.of(context)
+              .colorScheme
+              .copyWith(primary: const Color(0xffFF8C32)),
+        ),
+        child: Stepper(
+          type: StepperType.vertical,
+          currentStep: _activeStepIndex,
+          steps: stepList(),
+          onStepContinue: () {
+            if (_activeStepIndex < (stepList().length - 1)) {
+              setState(() {
+                _activeStepIndex += 1;
+              });
+            } else {
+              print('Submited');
+            }
+          },
+          onStepCancel: () {
+            if (_activeStepIndex == 0) {
+              return;
+            }
 
-          setState(() {
-            _activeStepIndex -= 1;
-          });
-        },
-        onStepTapped: (int index) {
-          setState(() {
-            _activeStepIndex = index;
-          });
-        },
-        controlsBuilder: (BuildContext context, details) {
-          final isLastStep = _activeStepIndex == stepList().length - 1;
-          return Row(
-            children: [
-              // Expanded(
-              //   child: ElevatedButton(
-              //     onPressed: details.onStepContinue,
-              //     child: (isLastStep)
-              //         ? const Text('Submit')
-              //         : const Text('Next'),
-              //   ),
-              // ),
-              // const SizedBox(
-              //   width: 10,
-              // ),
-              if (_activeStepIndex > 0)
+            setState(() {
+              _activeStepIndex -= 1;
+            });
+          },
+          onStepTapped: (int index) {
+            setState(() {
+              _activeStepIndex = index;
+            });
+          },
+          controlsBuilder: (BuildContext context, details) {
+            final isLastStep = _activeStepIndex == stepList().length - 1;
+            return Row(
+              children: [
+                if (_activeStepIndex > 0)
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: details.onStepCancel,
+                      child: const Text('Back'),
+                    ),
+                  ),
+                const SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: details.onStepCancel,
-                    child: const Text('Back'),
+                    onPressed: details.onStepContinue,
+                    child: (isLastStep)
+                        ? const Text('Submit')
+                        : const Text('Next'),
                   ),
                 ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: details.onStepContinue,
-                  child:
-                      (isLastStep) ? const Text('Submit') : const Text('Next'),
-                ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

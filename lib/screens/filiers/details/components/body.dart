@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/filiers/details/components/color_and_size.dart';
+import 'package:lp_ests/screens/filiers/details/components/license_title_and_image.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../models/licenses.dart';
 
 import 'description.dart';
-import 'license_title_and_image.dart';
 
 class Body extends StatelessWidget {
   final License license;
@@ -24,15 +23,15 @@ class Body extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                      margin: EdgeInsets.only(top: size.height * 0.3),
+                      margin: EdgeInsets.only(top: size.height * 0.2),
                       padding: EdgeInsets.only(
-                        top: size.height * 0.12,
+                        top: size.height * 0.01,
                         left: kDefaultPaddin,
                         right: kDefaultPaddin,
                       ),
                       // height: 500,
                       decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: Color(0xffF1F2F7),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
@@ -40,7 +39,7 @@ class Body extends StatelessWidget {
                       ),
                       child: ListView(
                         children: [
-                          ColorAndSize(license: license),
+                          //ColorAndSize(license: license),
                           Description(license: license)
                         ],
                       )),

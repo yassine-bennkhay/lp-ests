@@ -17,16 +17,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffF1F2F7),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
-          backgroundColor: const Color(0xffA54F25),
+          backgroundColor: const Color(0xffC4DDFF),
           title: text[_index],
           centerTitle: true,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30))),
+          // shape: const RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.only(
+          //         bottomRight: Radius.circular(30),
+          //         bottomLeft: Radius.circular(30))),
           shadowColor: Colors.transparent,
         ),
       ),
@@ -56,8 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(12),
             tabBorderRadius: 10,
             tabBackgroundColor: const Color(0xffEEEEEE),
-            activeColor: const Color(0xff5b9bd5),
-            color: const Color(0xffA54F25),
+            activeColor: const Color(0xff545454),
+            color: const Color(0xff000000),
             gap: 5,
             tabs: tabs),
       ),

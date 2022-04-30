@@ -24,14 +24,7 @@ class LicenseTitleAndImage extends StatelessWidget {
                 .headline4
                 ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          Hero(
-            tag: "${license.id}",
-            child: Image.asset(
-              license.img,
-              fit: BoxFit.fill,
-            ),
-          ),
-          const SizedBox(height: kDefaultPaddin),
+
           // Row(
           //   children: const <Widget>[
           //     // RichText(

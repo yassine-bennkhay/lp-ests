@@ -21,7 +21,7 @@ class LicenseCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(kDefaultPaddin),
               decoration: BoxDecoration(
-                color: const Color(0xffA54F25),
+                color: const Color(0xffC4DDFF),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Hero(

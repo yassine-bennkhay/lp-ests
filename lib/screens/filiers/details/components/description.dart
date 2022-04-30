@@ -16,7 +16,7 @@ class Description extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
       child: Text(
         license.description,
-        style: const TextStyle(height: 1.5),
+        style: const TextStyle(height: 1.6),
       ),
     );
   }

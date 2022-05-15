@@ -1,175 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:lp_ests/screens/apply/textfields/custom_text_field.dart';
 
 class Apply extends StatefulWidget {
-  const Apply({Key? key}) : super(key: key);
+const Apply({Key? key}) : super(key: key);
 
   @override
   _ApplyState createState() => _ApplyState();
 }
 
+class Data {
+  List<String> inputs = ['',''];
+}
+
 class _ApplyState extends State<Apply> {
-  int _activeStepIndex = 0;
-
-  TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
-  TextEditingController address = TextEditingController();
-  TextEditingController pincode = TextEditingController();
-
-  List<Step> stepList() => [
-        Step(
-          state: _activeStepIndex <= 0 ? StepState.editing : StepState.complete,
-          isActive: _activeStepIndex >= 0,
-          title: const Text('Les informations personelles'),
-          content: Padding(
-            padding: const EdgeInsets.only(
-              top: 4,
-              left: 8,
-            ),
-            child: Column(
-              children: [
-                TextField(
-                  controller: name,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Full Name',
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextField(
-                  controller: email,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextField(
-                  controller: pass,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Step(
-            state:
-                _activeStepIndex <= 1 ? StepState.editing : StepState.complete,
-            isActive: _activeStepIndex >= 1,
-            title: const Text('Address'),
-            content: Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                TextField(
-                  controller: address,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Full House Address',
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextField(
-                  controller: pincode,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Pin Code',
-                  ),
-                ),
-              ],
-            )),
-        Step(
-            state: StepState.complete,
-            isActive: _activeStepIndex >= 2,
-            title: const Text('Confirm'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Name: ${name.text}'),
-                Text('Email: ${email.text}'),
-                const Text('Password: *****'),
-                Text('Address : ${address.text}'),
-                Text('PinCode : ${pincode.text}'),
-              ],
-            ))
-      ];
-
+  var formKey = GlobalKey<FormState>();
+  static Data input = Data();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF1F2F7),
-      body: Theme(
-        data: ThemeData(
-          colorScheme: Theme.of(context)
-              .colorScheme
-              .copyWith(primary: const Color(0xffFF8C32)),
-        ),
-        child: Stepper(
-          type: StepperType.vertical,
-          currentStep: _activeStepIndex,
-          steps: stepList(),
-          onStepContinue: () {
-            if (_activeStepIndex < (stepList().length - 1)) {
-              setState(() {
-                _activeStepIndex += 1;
-              });
-            } else {
-              print('Submited');
-            }
-          },
-          onStepCancel: () {
-            if (_activeStepIndex == 0) {
-              return;
-            }
-
-            setState(() {
-              _activeStepIndex -= 1;
-            });
-          },
-          onStepTapped: (int index) {
-            setState(() {
-              _activeStepIndex = index;
-            });
-          },
-          controlsBuilder: (BuildContext context, details) {
-            final isLastStep = _activeStepIndex == stepList().length - 1;
-            return Row(
-              children: [
-                if (_activeStepIndex > 0)
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: details.onStepCancel,
-                      child: const Text('Back'),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Theme(
+          data: ThemeData(primaryColor: Colors.green),
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Les informations Personneles:",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                const SizedBox(
-                  width: 10,
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    createTextField('label1', TextInputType.datetime, 'msg', 0),
+                    createTextField('label2', TextInputType.datetime, 'msg', 1),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
+                                onPressed: () {
+                                  formKey.currentState!.reset();
+                                  //input1 = '';
+                                  //input2 = '';
+                                  setState(() {});
+                                },
+                                child: const Text('Clear'))),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                ),
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    formKey.currentState!.save();
+
+                                    setState(() {});
+                                  }
+                                },
+                                child: const Text('show'))),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text('Input1: ${input.inputs[0]}'),
+                    Text('Input2: ${input.inputs[1]}'),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: details.onStepContinue,
-                    child: (isLastStep)
-                        ? const Text('Submit')
-                        : const Text('Next'),
-                  ),
-                ),
-              ],
-            );
-          },
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
+  createTextField(String labelText, TextInputType textInputType, String message, int index) => TextFormField(
+      onSaved: (value) {
+        setState(() {
+          input.inputs[index] = value!;
+        });
+      },
+      keyboardType: textInputType,
+      decoration: InputDecoration(
+          labelStyle: const TextStyle(
+            color: Colors.green,
+          ),
+          labelText: labelText,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.green, width: 2.0),
+            borderRadius: BorderRadius.circular(8.0),
+          )),
+      validator: (text) {
+        if (text!.isEmpty) {
+          return message;
+        } else {
+          return null;
+        }
+      },
+    );
 }

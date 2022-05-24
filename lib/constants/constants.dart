@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../screens/accueil.dart';
 import '../screens/apply/apply.dart';
 import '../screens/filiers/filiers.dart';
-import '../screens/profile.dart';
+import '../screens/profile/sign_in.dart';
 
 final List<Widget> pages = [
   const Accueil(),
   const Filiers(),
-  Apply(),
-  const Profle(),
+  const Apply(),
+  SignIn(),
 ];
 List<Text> text = [
   const Text(

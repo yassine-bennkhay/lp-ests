@@ -12,7 +12,7 @@ class Apply extends StatefulWidget {
 }
 
 class Data {
-  List<String> inputs = ['', '', '', '', '', '', '', '', '', '', '', ''];
+  List<String> inputs = ['', '', '', '', '', '', '', '', '', '', '', '', ''];
 }
 
 class _ApplyState extends State<Apply> {
@@ -20,7 +20,12 @@ class _ApplyState extends State<Apply> {
   static Data input = Data();
   TextEditingController dateinput = TextEditingController();
   List bacs = [];
-  var _mySelection;
+  List diplomes = [];
+  List filiers = [];
+  bool isChanged = false;
+  var _selectedBac;
+  var _selectedDiplome;
+  var _selectedFiliere;
   Future fetchAllBacs() async {
     final response =
         await http.get(Uri.parse('http://192.168.156.2:4000/bacs'));
@@ -29,18 +34,44 @@ class _ApplyState extends State<Apply> {
       setState(() {
         bacs = jsonData;
       });
-
-      return "Sucess";
     } else {
       throw Exception('Failed to fetch bacs');
     }
   }
 
+  Future fetchAllDiplomes() async {
+    final response =
+        await http.get(Uri.parse('http://192.168.156.2:4000/diplomes'));
+    if (response.statusCode == 200) {
+      var diplomesData = jsonDecode(response.body);
+      setState(() {
+        diplomes = diplomesData;
+      });
+    } else {
+      throw Exception('Failed to fetch diplomes');
+    }
+  }
+
+  Future fetchFilierById(var id) async {
+    final response =
+        await http.get(Uri.parse('http://192.168.156.2:4000/filsC/$id'));
+    if (response.statusCode == 200) {
+      var diplomesData = jsonDecode(response.body);
+      setState(() {
+        filiers = diplomesData;
+      });
+      // print(diplomesData);
+    } else {
+      throw Exception('Failed to fetch filiers');
+    }
+  }
+
   @override
   void initState() {
-    dateinput.text = ""; //set the initial value of text field
+    dateinput.text = "";
     super.initState();
     fetchAllBacs();
+    fetchAllDiplomes();
   }
 
   @override
@@ -275,20 +306,80 @@ class _ApplyState extends State<Apply> {
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
-                          _mySelection = newVal;
+                          _selectedBac = newVal;
                         });
                       },
-                      value: _mySelection,
+                      value: _selectedBac,
                     ),
                     const SizedBox(
                       height: 8,
                     ),
                     createTextField(
-                      'Telephone',
+                      'Note de bac',
                       TextInputType.number,
-                      'S\'il vous plaît entrez votre Numero de telephone',
+                      'S\'il vous plaît entrez votre note de bac',
                       12,
                       TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    createTextField(
+                      'Annee de bac',
+                      TextInputType.number,
+                      'S\'il vous plaît entrez votre Annee de bac',
+                      13,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text(
+                      "Les information du diplome bac+2:",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    DropdownButton(
+                      hint: const Text("Choisir le type de diplome"),
+                      isExpanded: true,
+                      items: diplomes.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Intitule']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedDiplome = newVal;
+                        });
+                        fetchFilierById(_selectedDiplome);
+                      },
+                      value: _selectedDiplome,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    DropdownButton(
+                      hint: const Text("Choisir le type de filiere"),
+                      isExpanded: true,
+                      items: filiers.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Intitule']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedFiliere = newVal;
+                        });
+                      },
+                      value: _selectedFiliere,
+                    ),
+                    const SizedBox(
+                      height: 8,
                     ),
                     Column(
                       children: [
@@ -337,7 +428,8 @@ class _ApplyState extends State<Apply> {
                     Text('Rue: ${input.inputs[9]}'),
                     Text('code postale: ${input.inputs[10]}'),
                     Text('date de naissance: ${dateinput.text}'),
-                    Text('bac: $_mySelection'),
+                    Text('bac: $_selectedBac'),
+                    Text('diplome: $_selectedDiplome'),
                     const SizedBox(
                       height: 16,
                     ),

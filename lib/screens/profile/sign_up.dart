@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/profile/sign_in.dart';
 
 import 'components/text_widget.dart';
 
@@ -50,6 +49,12 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     return Scaffold(
+        appBar: AppBar(
+            shadowColor: Colors.transparent,
+            backgroundColor: const Color(0xff06113C),
+            leading: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: const Icon(Icons.arrow_back))),
         backgroundColor: const Color(0xFFffffff),
         body: SingleChildScrollView(
           child: Container(
@@ -109,15 +114,15 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(height: height * 0.1),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
-                      },
-                      child: TextWidget(
-                          text: "Sign In", fontSize: 16, isUnderLine: true),
-                    ),
+                  children: const [
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) => Profile()));
+                    //   },
+                    //   child: TextWidget(
+                    //       text: "Sign In", fontSize: 16, isUnderLine: true),
+                    // ),
                   ],
                 )
               ],

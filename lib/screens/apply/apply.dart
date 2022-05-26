@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 class Apply extends StatefulWidget {
   const Apply({Key? key}) : super(key: key);
 
@@ -9,17 +12,35 @@ class Apply extends StatefulWidget {
 }
 
 class Data {
-  List<String> inputs = ['', '', '', '', '', '', '', '', ''];
+  List<String> inputs = ['', '', '', '', '', '', '', '', '', '', '', ''];
 }
 
 class _ApplyState extends State<Apply> {
   var formKey = GlobalKey<FormState>();
   static Data input = Data();
   TextEditingController dateinput = TextEditingController();
+  List bacs = [];
+  var _mySelection;
+  Future fetchAllBacs() async {
+    final response =
+        await http.get(Uri.parse('http://192.168.156.2:4000/bacs'));
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      setState(() {
+        bacs = jsonData;
+      });
+
+      return "Sucess";
+    } else {
+      throw Exception('Failed to fetch bacs');
+    }
+  }
+
   @override
   void initState() {
     dateinput.text = ""; //set the initial value of text field
     super.initState();
+    fetchAllBacs();
   }
 
   @override
@@ -150,8 +171,6 @@ class _ApplyState extends State<Apply> {
                             dateinput.text =
                                 formattedDate; //set output date to TextField value.
                           });
-                        } else {
-                          print("Date is not selected");
                         }
                       },
                     ),
@@ -188,18 +207,87 @@ class _ApplyState extends State<Apply> {
                     const SizedBox(
                       height: 8,
                     ),
+                    createTextField(
+                      'Telephone',
+                      TextInputType.number,
+                      'S\'il vous plaît entrez votre Numero de telephone',
+                      8,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     const Text(
-                      "Address:",
+                      "Address Details:",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 8,
                     ),
+
                     createTextField(
-                      'Address',
+                      'Ville',
                       TextInputType.text,
-                      'S\'il vous plaît entrez votre Address',
-                      8,
+                      'S\'il vous plaît entrez votre Ville',
+                      9,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    createTextField(
+                      'Rue',
+                      TextInputType.text,
+                      'S\'il vous plaît entrez votre rue',
+                      10,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    createTextField(
+                      'Code postale',
+                      TextInputType.text,
+                      'S\'il vous plaît entrez votre code postale',
+                      11,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text(
+                      "Les information du bacalaureat:",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    DropdownButton(
+                      hint: const Text("Choisir le type de votre bac"),
+                      isExpanded: true,
+                      items: bacs.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Intitule']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _mySelection = newVal;
+                        });
+                      },
+                      value: _mySelection,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    createTextField(
+                      'Telephone',
+                      TextInputType.number,
+                      'S\'il vous plaît entrez votre Numero de telephone',
+                      12,
                       TextDirection.ltr,
                     ),
                     Column(
@@ -244,8 +332,12 @@ class _ApplyState extends State<Apply> {
                     Text('CIN: ${input.inputs[4]}'),
                     Text('CNE: ${input.inputs[5]}'),
                     Text('Email: ${input.inputs[6]}'),
-                    Text('Address: ${input.inputs[7]}'),
+                    Text('Ville: ${input.inputs[7]}'),
+                    Text('Telephone: ${input.inputs[8]}'),
+                    Text('Rue: ${input.inputs[9]}'),
+                    Text('code postale: ${input.inputs[10]}'),
                     Text('date de naissance: ${dateinput.text}'),
+                    Text('bac: $_mySelection'),
                     const SizedBox(
                       height: 16,
                     ),

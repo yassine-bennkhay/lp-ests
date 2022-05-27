@@ -12,7 +12,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController passController = TextEditingController();
-
+  bool _passwordVisible = false;
   TextEditingController emailController = TextEditingController();
 
   @override
@@ -60,6 +60,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   var formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -101,6 +102,20 @@ class _SignUpState extends State<SignUp> {
                         height: height * .05,
                       ),
                       TextInput(
+                        iconButton: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: const Color(0xff06113C),
+                          ),
+                          onPressed: () {
+                            // Update the state i.e. toogle the state of passwordVisible variable
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
                         validate: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Un mot de passe est requis';
@@ -109,13 +124,27 @@ class _SignUpState extends State<SignUp> {
                         },
                         textString: "Password",
                         textController: passController,
-                        obscureText: true,
+                        obscureText: _passwordVisible,
                         // onSelectParam: (String) {},
                       ),
                       SizedBox(
                         height: height * .05,
                       ),
                       TextInput(
+                        iconButton: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: const Color(0xff06113C),
+                          ),
+                          onPressed: () {
+                            // Update the state i.e. toogle the state of passwordVisible variable
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
                         validate: (value) {
                           if (value == null || value.isEmpty) {
                             return 'La confirmation du mot de passe est requis';
@@ -124,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                         },
                         textString: "Confirmer votre Password",
                         textController: passController,
-                        obscureText: true,
+                        obscureText: _passwordVisible,
                       ),
                     ],
                   ),
@@ -165,37 +194,45 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-class TextInput extends StatelessWidget {
+class TextInput extends StatefulWidget {
   final String textString;
 
   TextEditingController textController;
-  final bool obscureText;
+  bool obscureText;
   var validate;
+  Widget? iconButton;
   TextInput(
       {Key? key,
       required this.textString,
       required this.textController,
       required this.obscureText,
-      required this.validate})
+      required this.validate,
+      this.iconButton})
       : super(key: key);
 
   @override
+  State<TextInput> createState() => _TextInputState();
+}
+
+class _TextInputState extends State<TextInput> {
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: validate,
+      validator: widget.validate,
       style: const TextStyle(color: Color(0xFF000000)),
       cursorColor: const Color(0xFF9b9b9b),
-      controller: textController,
+      controller: widget.textController,
       keyboardType: TextInputType.text,
-      obscureText: obscureText,
+      obscureText: widget.obscureText,
       decoration: InputDecoration(
+        suffixIcon: widget.iconButton,
         labelStyle: const TextStyle(color: Color(0xff06113C)),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xff06113C), width: 2.0),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        labelText: textString,
+        labelText: widget.textString,
         hintStyle: const TextStyle(
             color: Color(0xFF9b9b9b),
             fontSize: 15,

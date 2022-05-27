@@ -41,7 +41,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 Form(
                   key: formKey,
                   child: TextInput(
-                    iconButton: const Text(''),
                     obscureText: false,
                     validateForm: (value) {
                       if (value == null || value.isEmpty) {

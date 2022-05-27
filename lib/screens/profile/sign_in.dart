@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lp_ests/screens/profile/forget_password.dart';
 import 'package:lp_ests/screens/profile/sign_up.dart';
-// import '../api/my_api.dart';
+import 'package:http/http.dart' as http;
+import 'package:lp_ests/screens/test.dart';
+import 'dart:convert';
 import './components/text_widget.dart';
 // import '../singup_login/sing_up.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +14,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  TextEditingController textController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  var isLoading = false;
 
   @override
   void initState() {
@@ -21,40 +24,20 @@ class _SignInState extends State<SignIn> {
     super.initState();
   }
 
-  _showMsg(msg) {
-    //
-    final snackBar = SnackBar(
-      backgroundColor: const Color(0xFF363f93),
-      content: Text(msg),
-      action: SnackBarAction(
-        label: 'Close',
-        onPressed: () {
-          // Some code to undo the change!
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   _login() async {
-    var data = {
-      'email': emailController.text,
-      'password': textController.text,
-    };
-
-    //   var res = await CallApi().postData(data, 'login');
-    //   var body = json.decode(res.body);
-    //   print(body);
-    //   if (body['success']) {
-    //     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    //     localStorage.setString('token', body['token']);
-    //     localStorage.setString('user', json.encode(body['user']));
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => ArticlePage()));
-    //   } else {
-    //     _showMsg(body['message']);
-    //   }
-    // }
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST', Uri.parse('http://192.168.0.122:4000/accounts/authenticate'));
+    request.body = json.encode(
+        {"email": emailController.text, "password": passwordController.text});
+    request.headers.addAll(headers);
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Test()));
+    } else {
+      print("we cant log you in right now!");
+    }
   }
 
   @override
@@ -85,7 +68,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 TextInput(
                   textString: "Password",
-                  textController: textController,
+                  textController: passwordController,
                   hint: "Password",
                   // onSelectParam: (String) {},
                 ),
@@ -99,30 +82,11 @@ class _SignInState extends State<SignIn> {
                       style: ElevatedButton.styleFrom(
                         primary: const Color(0xff06113C),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        _login();
+                      },
                       child: const Text("Sign In"),
                     )),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     TextWidget(
-                //         text: "Sign in", fontSize: 22, isUnderLine: false),
-                //     GestureDetector(
-                //         onTap: () {
-                //           _login();
-                //         },
-                //         child: Container(
-                //           height: 80,
-                //           width: 80,
-                //           decoration: const BoxDecoration(
-                //             shape: BoxShape.circle,
-                //             color: Color(0xFF363f93),
-                //           ),
-                //           child: const Icon(Icons.arrow_forward,
-                //               color: Colors.white, size: 30),
-                //         ))
-                //   ],
-                // ),
                 SizedBox(height: height * 0.1),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

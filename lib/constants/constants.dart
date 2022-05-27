@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lp_ests/screens/sign_in/sign_in.dart';
 
 import '../screens/accueil.dart';
 import '../screens/apply/apply.dart';
 import '../screens/filiers/filiers.dart';
-import '../screens/profile/sign_in.dart';
 
 final List<Widget> pages = [
   const Accueil(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/profile/forget_password.dart';
-import 'package:lp_ests/screens/profile/sign_up.dart';
 import 'package:http/http.dart' as http;
+import 'package:lp_ests/screens/forget_password/forget_password.dart';
+import 'package:lp_ests/screens/sign_up/sign_up.dart';
 import 'package:lp_ests/screens/test.dart';
 import 'dart:convert';
 import './components/text_widget.dart';
@@ -16,15 +16,12 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  var isLoading = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
+  var formKey = GlobalKey<FormState>();
+  var isLoadingToSignIn = false;
   _login() async {
+    setState(() {
+      isLoadingToSignIn = true;
+    });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
         'POST', Uri.parse('http://192.168.0.122:4000/accounts/authenticate'));
@@ -33,6 +30,9 @@ class _SignInState extends State<SignIn> {
     request.headers.addAll(headers);
     var response = await request.send();
     if (response.statusCode == 200) {
+      setState(() {
+        isLoadingToSignIn = false;
+      });
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Test()));
     } else {
@@ -58,19 +58,36 @@ class _SignInState extends State<SignIn> {
                 TextWidget(
                     text: "à votre compte!", fontSize: 26, isUnderLine: false),
                 SizedBox(height: height * 0.1),
-                TextInput(
-                  textString: "Email",
-                  textController: emailController,
-                  hint: "Email",
-                ),
-                SizedBox(
-                  height: height * .05,
-                ),
-                TextInput(
-                  textString: "Password",
-                  textController: passwordController,
-                  hint: "Password",
-                  // onSelectParam: (String) {},
+                Form(
+                  key: formKey,
+                  child: Column(children: [
+                    TextInput(
+                      validateForm: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Une adresse email valide est requis';
+                        }
+                        return null;
+                      },
+                      textString: "Email",
+                      textController: emailController,
+                      hint: "Email",
+                    ),
+                    SizedBox(
+                      height: height * .05,
+                    ),
+                    TextInput(
+                      validateForm: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Un mot de passe est requis';
+                        }
+                        return null;
+                      },
+                      textString: "Password",
+                      textController: passwordController,
+                      hint: "Password",
+                      // onSelectParam: (String) {},
+                    ),
+                  ]),
                 ),
                 SizedBox(
                   height: height * .05,
@@ -83,9 +100,13 @@ class _SignInState extends State<SignIn> {
                         primary: const Color(0xff06113C),
                       ),
                       onPressed: () {
-                        _login();
+                        if (formKey.currentState!.validate()) {
+                          _login();
+                        }
                       },
-                      child: const Text("Sign In"),
+                      child: isLoadingToSignIn
+                          ? const CircularProgressIndicator()
+                          : const Text("Sign In"),
                     )),
                 SizedBox(height: height * 0.1),
                 Row(
@@ -127,17 +148,20 @@ class TextInput extends StatelessWidget {
   TextEditingController textController;
   final String hint;
   bool obscureText;
+  var validateForm;
   TextInput(
       {Key? key,
       required this.textString,
       required this.textController,
       required this.hint,
+      required this.validateForm,
       this.obscureText = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: validateForm,
       style: const TextStyle(color: Color(0xFF000000)),
       cursorColor: const Color(0xFF9b9b9b),
       controller: textController,

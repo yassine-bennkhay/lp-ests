@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/profile/sign_in.dart';
+import 'package:lp_ests/screens/sign_in/sign_in.dart';
 
-import 'components/text_widget.dart';
+import '../sign_in/components/text_widget.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
@@ -11,6 +11,12 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  var formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -32,10 +38,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     fontSize: 26,
                     isUnderLine: false),
                 SizedBox(height: height * 0.1),
-                TextInput(
-                  textString: "Email",
-                  textController: emailController,
-                  hint: "Email",
+                Form(
+                  key: formKey,
+                  child: TextInput(
+                    validateForm: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Une adresse email valide est requis';
+                      }
+                      return null;
+                    },
+                    textString: "Email",
+                    textController: emailController,
+                    hint: "Email",
+                  ),
                 ),
                 SizedBox(
                   height: height * .05,
@@ -47,7 +62,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       style: ElevatedButton.styleFrom(
                         primary: const Color(0xff06113C),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          print("kkkkkkkkkkkkkkkk");
+                        }
+                      },
                       child: const Text("Réinitialisez"),
                     )),
                 // SizedBox(height: height * 0.1),

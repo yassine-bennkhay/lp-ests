@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'components/text_widget.dart';
+import '../sign_in/components/text_widget.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -150,39 +150,14 @@ class _SignUpState extends State<SignUp> {
                             )
                           : const Text("Sign Up"),
                     )),
+
+                // SizedBox(height: height * 0.1),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     TextWidget(
-                //         text: "Sign Up", fontSize: 22, isUnderLine: false),
-                //     GestureDetector(
-                //         onTap: () {},
-                //         child: Container(
-                //           height: 80,
-                //           width: 80,
-                //           decoration: const BoxDecoration(
-                //             shape: BoxShape.circle,
-                //             color: Color(0xFF363f93),
-                //           ),
-                //           child: const Icon(Icons.arrow_forward,
-                //               color: Colors.white, size: 30),
-                //         ))
+                //   children: const [
+
                 //   ],
-                // ),
-                SizedBox(height: height * 0.1),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     Navigator.push(context,
-                    //         MaterialPageRoute(builder: (context) => Profile()));
-                    //   },
-                    //   child: TextWidget(
-                    //       text: "Sign In", fontSize: 16, isUnderLine: true),
-                    // ),
-                  ],
-                )
+                // )
               ],
             ),
           ),

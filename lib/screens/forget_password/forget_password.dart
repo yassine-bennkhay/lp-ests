@@ -41,6 +41,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 Form(
                   key: formKey,
                   child: TextInput(
+                    iconButton: const Text(''),
+                    obscureText: false,
                     validateForm: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Une adresse email valide est requis';
@@ -63,9 +65,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         primary: const Color(0xff06113C),
                       ),
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          print("kkkkkkkkkkkkkkkk");
-                        }
+                        if (formKey.currentState!.validate()) {}
                       },
                       child: const Text("Réinitialisez"),
                     )),

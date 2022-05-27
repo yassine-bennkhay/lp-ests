@@ -12,7 +12,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController passController = TextEditingController();
-  TextEditingController repassController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
 
   @override
@@ -20,29 +20,46 @@ class _SignUpState extends State<SignUp> {
     super.initState();
   }
 
+  var isLoading = false;
   _register() async {
+    setState(() {
+      isLoading = true;
+    });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
         'POST', Uri.parse('http://192.168.0.122:4000/accounts/register'));
     request.body = json.encode({
       "email": emailController.text,
       "password": passController.text,
-      "confirmPassword": repassController.text
+      "confirmPassword": passController.text
     });
-    print(emailController.text);
-    print(passController.text);
-    print(repassController.text);
+
     request.headers.addAll(headers);
 
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      print("Account created successfully");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Color(0xff06113C),
+        content: Text(
+            "Inscription réussie, veuillez vérifier votre e-mail pour les instructions de vérification"),
+        duration: Duration(seconds: 8),
+      ));
+      setState(() {
+        isLoading = false;
+      });
+      Future.delayed(const Duration(seconds: 8), () {
+        Navigator.pop(context);
+      });
     } else {
-      print("An error occurured");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Sorry something went wrong!'),
+        duration: Duration(milliseconds: 300),
+      ));
     }
   }
 
+  var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -66,26 +83,51 @@ class _SignUpState extends State<SignUp> {
                 TextWidget(
                     text: "votre compte!", fontSize: 26, isUnderLine: false),
                 SizedBox(height: height * 0.1),
-                TextInput(
-                    textString: 'Email',
-                    textController: emailController,
-                    obscureText: false),
-                SizedBox(
-                  height: height * .05,
-                ),
-                TextInput(
-                  textString: "Password",
-                  textController: passController,
-                  obscureText: true,
-                  // onSelectParam: (String) {},
-                ),
-                SizedBox(
-                  height: height * .05,
-                ),
-                TextInput(
-                  textString: "Confirmer votre Password",
-                  textController: repassController,
-                  obscureText: true,
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextInput(
+                          validate: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Une adresse email valide est requis';
+                            }
+                            return null;
+                          },
+                          textString: 'Email',
+                          textController: emailController,
+                          obscureText: false),
+                      SizedBox(
+                        height: height * .05,
+                      ),
+                      TextInput(
+                        validate: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Un mot de passe est requis';
+                          }
+                          return null;
+                        },
+                        textString: "Password",
+                        textController: passController,
+                        obscureText: true,
+                        // onSelectParam: (String) {},
+                      ),
+                      SizedBox(
+                        height: height * .05,
+                      ),
+                      TextInput(
+                        validate: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'La confirmation du mot de passe est requis';
+                          }
+                          return null;
+                        },
+                        textString: "Confirmer votre Password",
+                        textController: passController,
+                        obscureText: true,
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: height * .05,
@@ -98,9 +140,15 @@ class _SignUpState extends State<SignUp> {
                         primary: const Color(0xff06113C),
                       ),
                       onPressed: () {
-                        _register();
+                        if (formKey.currentState!.validate()) {
+                          _register();
+                        }
                       },
-                      child: const Text("Sign Up"),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text("Sign Up"),
                     )),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,18 +192,22 @@ class _SignUpState extends State<SignUp> {
 
 class TextInput extends StatelessWidget {
   final String textString;
+
   TextEditingController textController;
   final bool obscureText;
+  var validate;
   TextInput(
       {Key? key,
       required this.textString,
       required this.textController,
-      required this.obscureText})
+      required this.obscureText,
+      required this.validate})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: validate,
       style: const TextStyle(color: Color(0xFF000000)),
       cursorColor: const Color(0xFF9b9b9b),
       controller: textController,

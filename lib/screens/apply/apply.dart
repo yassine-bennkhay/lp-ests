@@ -12,7 +12,23 @@ class Apply extends StatefulWidget {
 }
 
 class Data {
-  List<String> inputs = ['', '', '', '', '', '', '', '', '', '', '', '', ''];
+  List<String> inputs = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    ''
+  ];
 }
 
 class _ApplyState extends State<Apply> {
@@ -22,13 +38,15 @@ class _ApplyState extends State<Apply> {
   List bacs = [];
   List diplomes = [];
   List filiers = [];
-  bool isChanged = false;
+  List filiersToApplyFor = [];
   var _selectedBac;
   var _selectedDiplome;
   var _selectedFiliere;
+  var _selectedChoiceOne;
+  var _selectedChoiceTwo;
   Future fetchAllBacs() async {
     final response =
-        await http.get(Uri.parse('http://192.168.156.2:4000/bacs'));
+        await http.get(Uri.parse('http://192.168.0.122:4000/bacs'));
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       setState(() {
@@ -41,7 +59,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.156.2:4000/diplomes'));
+        await http.get(Uri.parse('http://192.168.0.122:4000/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -52,9 +70,9 @@ class _ApplyState extends State<Apply> {
     }
   }
 
-  Future fetchFilierById(var id) async {
+  Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.156.2:4000/filsC/$id'));
+        await http.get(Uri.parse('http://192.168.0.122:4000/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -63,6 +81,19 @@ class _ApplyState extends State<Apply> {
       // print(diplomesData);
     } else {
       throw Exception('Failed to fetch filiers');
+    }
+  }
+
+  Future fetchFilierToApplyForById(var idFilier) async {
+    final response = await http
+        .get(Uri.parse('http://192.168.0.122:4000/filspourpostuler/$idFilier'));
+    if (response.statusCode == 200) {
+      var filierData = jsonDecode(response.body);
+      setState(() {
+        filiersToApplyFor = filierData;
+      });
+    } else {
+      throw Exception("Failed to fetch Filiers to apply for.");
     }
   }
 
@@ -315,7 +346,7 @@ class _ApplyState extends State<Apply> {
                       height: 8,
                     ),
                     createTextField(
-                      'Note de bac',
+                      'Note du Baccalauréat',
                       TextInputType.number,
                       'S\'il vous plaît entrez votre note de bac',
                       12,
@@ -325,7 +356,7 @@ class _ApplyState extends State<Apply> {
                       height: 8,
                     ),
                     createTextField(
-                      'Annee de bac',
+                      'Année du Baccalauréat',
                       TextInputType.number,
                       'S\'il vous plaît entrez votre Annee de bac',
                       13,
@@ -353,8 +384,9 @@ class _ApplyState extends State<Apply> {
                       onChanged: (newVal) {
                         setState(() {
                           _selectedDiplome = newVal;
+                          _selectedFiliere = null;
+                          fetchFilierById(_selectedDiplome);
                         });
-                        fetchFilierById(_selectedDiplome);
                       },
                       value: _selectedDiplome,
                     ),
@@ -374,12 +406,77 @@ class _ApplyState extends State<Apply> {
                       onChanged: (newVal) {
                         setState(() {
                           _selectedFiliere = newVal;
+                          //It should be selectedFilier
+                          //but for now we don't have all filiers yet.
+                          fetchFilierToApplyForById(_selectedDiplome);
                         });
                       },
                       value: _selectedFiliere,
                     ),
                     const SizedBox(
                       height: 8,
+                    ),
+
+                    createTextField(
+                      'Année d\'obtention du diplôme',
+                      TextInputType.number,
+                      'S\'il vous plaît entrez votre Annee de bac',
+                      14,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    createTextField(
+                      'Note du diplome universitaire',
+                      TextInputType.number,
+                      'S\'il vous plaît entrez votre Annee de bac',
+                      15,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text(
+                      "Les informations du choix:",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    DropdownButton(
+                      hint: const Text("Le premiere choix"),
+                      isExpanded: true,
+                      items: filiersToApplyFor.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Intitule']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedChoiceOne = newVal;
+                        });
+                      },
+                      value: _selectedChoiceOne,
+                    ),
+                    DropdownButton(
+                      hint: const Text("la deuxième choix"),
+                      isExpanded: true,
+                      items: filiersToApplyFor.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Intitule']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedChoiceTwo = newVal;
+                        });
+                      },
+                      value: _selectedChoiceTwo,
                     ),
                     Column(
                       children: [

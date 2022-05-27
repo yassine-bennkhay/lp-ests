@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lp_ests/screens/profile/forget_password.dart';
 import 'package:lp_ests/screens/profile/sign_up.dart';
 // import '../api/my_api.dart';
 import './components/text_widget.dart';
@@ -91,27 +92,37 @@ class _SignInState extends State<SignIn> {
                 SizedBox(
                   height: height * .05,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextWidget(
-                        text: "Sign in", fontSize: 22, isUnderLine: false),
-                    GestureDetector(
-                        onTap: () {
-                          _login();
-                        },
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF363f93),
-                          ),
-                          child: const Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 30),
-                        ))
-                  ],
-                ),
+                SizedBox(
+                    height: height * .05,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color(0xff06113C),
+                      ),
+                      onPressed: () {},
+                      child: const Text("Sign In"),
+                    )),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     TextWidget(
+                //         text: "Sign in", fontSize: 22, isUnderLine: false),
+                //     GestureDetector(
+                //         onTap: () {
+                //           _login();
+                //         },
+                //         child: Container(
+                //           height: 80,
+                //           width: 80,
+                //           decoration: const BoxDecoration(
+                //             shape: BoxShape.circle,
+                //             color: Color(0xFF363f93),
+                //           ),
+                //           child: const Icon(Icons.arrow_forward,
+                //               color: Colors.white, size: 30),
+                //         ))
+                //   ],
+                // ),
                 SizedBox(height: height * 0.1),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +138,12 @@ class _SignInState extends State<SignIn> {
                           text: "Sign up", fontSize: 16, isUnderLine: true),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ForgetPassword()));
+                      },
                       child: TextWidget(
                           text: "Forgot Password",
                           fontSize: 16,
@@ -164,7 +180,13 @@ class TextInput extends StatelessWidget {
       keyboardType: TextInputType.text,
       obscureText: obscureText,
       decoration: InputDecoration(
-        hintText: textString,
+        labelStyle: const TextStyle(color: Color(0xff06113C)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xff06113C), width: 2.0),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        labelText: textString,
         hintStyle: const TextStyle(
             color: Color(0xFF9b9b9b),
             fontSize: 15,

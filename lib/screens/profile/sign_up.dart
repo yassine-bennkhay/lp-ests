@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'components/text_widget.dart';
 
 class SignUp extends StatefulWidget {
@@ -13,38 +14,35 @@ class _SignUpState extends State<SignUp> {
   TextEditingController passController = TextEditingController();
   TextEditingController repassController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
-  // _register() async {
-  //   var data = {
-  //     'name'  :nameController.text,
-  //     'email' : emailController.text,
-  //     'password' : passController.text,
-  //   };
-  //   debugPrint(nameController.text);
-  //   debugPrint(emailController.text);
-  //   debugPrint(passController.text);
-  //   debugPrint(repassController.text);
+  _register() async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST', Uri.parse('http://192.168.0.122:4000/accounts/register'));
+    request.body = json.encode({
+      "email": emailController.text,
+      "password": passController.text,
+      "confirmPassword": repassController.text
+    });
+    print(emailController.text);
+    print(passController.text);
+    print(repassController.text);
+    request.headers.addAll(headers);
 
-  //   var res = await CallApi().postData(data, 'register');
-  //   var body = json.decode(res.body);
-  //   print(body);
-  //   if(body['success']){
-  //     //SharedPreferences localStorage = await SharedPreferences.getInstance();
-  //     // localStorage.setString('token', body['token']);
-  //     //localStorage.setString('user', json.encode(body['user']));
-  //     Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) => FilierHome()));
-  //   }
-  // }
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print("Account created successfully");
+    } else {
+      print("An error occurured");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -71,7 +69,7 @@ class _SignUpState extends State<SignUp> {
                 TextInput(
                     textString: 'Email',
                     textController: emailController,
-                    obscureText: true),
+                    obscureText: false),
                 SizedBox(
                   height: height * .05,
                 ),
@@ -86,31 +84,43 @@ class _SignUpState extends State<SignUp> {
                 ),
                 TextInput(
                   textString: "Confirmer votre Password",
-                  textController: passController,
+                  textController: repassController,
                   obscureText: true,
                 ),
                 SizedBox(
                   height: height * .05,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextWidget(
-                        text: "Sign Up", fontSize: 22, isUnderLine: false),
-                    GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF363f93),
-                          ),
-                          child: const Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 30),
-                        ))
-                  ],
-                ),
+                SizedBox(
+                    height: height * .05,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color(0xff06113C),
+                      ),
+                      onPressed: () {
+                        _register();
+                      },
+                      child: const Text("Sign Up"),
+                    )),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     TextWidget(
+                //         text: "Sign Up", fontSize: 22, isUnderLine: false),
+                //     GestureDetector(
+                //         onTap: () {},
+                //         child: Container(
+                //           height: 80,
+                //           width: 80,
+                //           decoration: const BoxDecoration(
+                //             shape: BoxShape.circle,
+                //             color: Color(0xFF363f93),
+                //           ),
+                //           child: const Icon(Icons.arrow_forward,
+                //               color: Colors.white, size: 30),
+                //         ))
+                //   ],
+                // ),
                 SizedBox(height: height * 0.1),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,7 +162,13 @@ class TextInput extends StatelessWidget {
       keyboardType: TextInputType.text,
       obscureText: obscureText,
       decoration: InputDecoration(
-        hintText: textString,
+        labelStyle: const TextStyle(color: Color(0xff06113C)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Color(0xff06113C), width: 2.0),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        labelText: textString,
         hintStyle: const TextStyle(
             color: Color(0xFF9b9b9b),
             fontSize: 15,

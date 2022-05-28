@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import '../screens/home_page.dart';
+import 'package:lp_ests/screens/home_page.dart';
+import 'package:lp_ests/screens/sign_in/sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  var email = prefs.getString('email');
+  runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
-    );
-  }
+      home: email == null ? SignIn() : const MyHomePage()));
 }
-

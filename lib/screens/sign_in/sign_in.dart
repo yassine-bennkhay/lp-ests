@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lp_ests/screens/forget_password/forget_password.dart';
+import 'package:lp_ests/screens/home_page.dart';
 import 'package:lp_ests/screens/sign_up/sign_up.dart';
-import 'package:lp_ests/screens/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './components/text_widget.dart';
+
 // import '../singup_login/sing_up.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +21,7 @@ class _SignInState extends State<SignIn> {
   var formKey = GlobalKey<FormState>();
   var isLoadingToSignIn = false;
   bool _passwordVisible = false;
+  bool isLoggedIn = false;
   _login() async {
     setState(() {
       isLoadingToSignIn = true;
@@ -34,8 +37,10 @@ class _SignInState extends State<SignIn> {
       setState(() {
         isLoadingToSignIn = false;
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', emailController.text);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Test()));
+          context, MaterialPageRoute(builder: (context) => const MyHomePage()));
     } else {
       print("we cant log you in right now!");
     }

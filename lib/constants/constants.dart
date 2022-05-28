@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/sign_in/sign_in.dart';
+import 'package:lp_ests/screens/profile/profile_screen.dart';
 
 import '../screens/accueil.dart';
 import '../screens/apply/apply.dart';
@@ -9,7 +9,7 @@ final List<Widget> pages = [
   const Accueil(),
   const Filiers(),
   const Apply(),
-  SignIn(),
+  ProfileScreen(),
 ];
 List<Text> text = [
   const Text(
@@ -30,3 +30,6 @@ const kTextColor = Color(0xFF535353);
 const kTextLightColor = Color(0xFFACACAC);
 
 const kDefaultPaddin = 20.0;
+
+const kPrimaryColor = Color(0xFF06113C);
+const kInputColor = Color(0xFFF5F6F9);

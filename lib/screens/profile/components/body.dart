@@ -67,6 +67,8 @@ class Body extends StatelessWidget {
             press: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.remove('email');
+              prefs.remove('id');
+
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (BuildContext ctx) => SignIn()));
             },

@@ -4,6 +4,8 @@ import 'package:intl/intl.dart' as intl;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../constants/constants.dart';
+
 class Apply extends StatefulWidget {
   const Apply({Key? key}) : super(key: key);
 
@@ -46,7 +48,7 @@ class _ApplyState extends State<Apply> {
   var _selectedChoiceTwo;
   Future fetchAllBacs() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.122:4000/bacs'));
+        await http.get(Uri.parse('http://192.168.0.121:4000/bacs'));
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       setState(() {
@@ -59,7 +61,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.122:4000/diplomes'));
+        await http.get(Uri.parse('http://192.168.0.121:4000/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -72,7 +74,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.122:4000/filsC/$idDiplome'));
+        await http.get(Uri.parse('http://192.168.0.121:4000/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -86,7 +88,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierToApplyForById(var idFilier) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.122:4000/filspourpostuler/$idFilier'));
+        .get(Uri.parse('http://192.168.0.121:4000/filspourpostuler/$idFilier'));
     if (response.statusCode == 200) {
       var filierData = jsonDecode(response.body);
       setState(() {
@@ -480,33 +482,78 @@ class _ApplyState extends State<Apply> {
                     ),
                     Column(
                       children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
+                        // ElevatedButton(
+                        //     style: ElevatedButton.styleFrom(
+                        //       primary: Colors.red,
+                        //     ),
+                        //     onPressed: () {
+                        //       formKey.currentState!.reset();
+
+                        //       setState(() {});
+                        //     },
+                        //     child: const Text('Clear')),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            primary: kPrimaryColor,
+                            padding: const EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                          onPressed: () {
+                            formKey.currentState!.reset();
+
+                            setState(() {});
+                          },
+                          child: const Center(
+                            child: Text(
+                              "Supprimer tous les champs",
+                              style: TextStyle(color: Colors.white),
                             ),
-                            onPressed: () {
-                              formKey.currentState!.reset();
+                          ),
+                        ),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   child: ElevatedButton(
+                        //       style: ElevatedButton.styleFrom(
+                        //         primary: Colors.green,
+                        //       ),
+                        //       onPressed: () {
+                        //         if (formKey.currentState!.validate()) {
+                        //           formKey.currentState!.save();
+
+                        //           setState(() {});
+                        //         }
+                        //       },
+                        //       child: const Text('Submit')),
+                        // ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            primary: kPrimaryColor,
+                            padding: const EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: const Color(0xFF06113C),
+                          ),
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
 
                               setState(() {});
-                            },
-                            child: const Text('Clear')),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.green,
-                              ),
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  formKey.currentState!.save();
-
-                                  setState(() {});
-                                }
-                              },
-                              child: const Text('Submit')),
+                            }
+                          },
+                          child: const Center(
+                            child: Text(
+                              "Envoyer mes informations",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                       ],
                     ),

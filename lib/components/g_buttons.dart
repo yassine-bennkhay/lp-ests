@@ -13,7 +13,7 @@ List<GButton> tabs = const [
     text: 'Filières LP',
   ),
   GButton(
-    icon: Icons.add,
+    icon: Icons.add_circle_outline,
     text: 'S\'inscrire',
   ),
   GButton(

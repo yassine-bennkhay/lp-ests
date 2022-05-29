@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lp_ests/models/user.dart';
 import 'package:lp_ests/screens/forget_password/forget_password.dart';
 import 'package:lp_ests/screens/home_page.dart';
 import 'package:lp_ests/screens/sign_up/sign_up.dart';
@@ -22,23 +23,30 @@ class _SignInState extends State<SignIn> {
   var isLoadingToSignIn = false;
   bool _passwordVisible = false;
   bool isLoggedIn = false;
+  var userData = [];
   _login() async {
     setState(() {
       isLoadingToSignIn = true;
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.122:4000/accounts/authenticate'));
+        'POST', Uri.parse('http://192.168.0.121:4000/accounts/authenticate'));
     request.body = json.encode(
         {"email": emailController.text, "password": passwordController.text});
     request.headers.addAll(headers);
     var response = await request.send();
+
     if (response.statusCode == 200) {
+      final respStr = await response.stream.bytesToString();
+      var data = User.fromJson(jsonDecode(respStr));
+
       setState(() {
         isLoadingToSignIn = false;
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', emailController.text);
+      prefs.setString('email', data.email);
+      prefs.setInt('id', data.id);
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MyHomePage()));
     } else {

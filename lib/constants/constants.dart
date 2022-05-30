@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/accueil.dart';
 import 'package:lp_ests/screens/profile/profile_screen.dart';
+import 'package:lp_ests/send_form.dart';
 
 import '../screens/apply/apply.dart';
 import '../screens/filiers/filiers.dart';
 
 final List<Widget> pages = [
-  const Accueil(),
+  const SendForm(),
+  // Accueil(),
   const Filiers(),
   const Apply(),
   ProfileScreen(),

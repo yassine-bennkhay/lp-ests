@@ -22,7 +22,7 @@ class _SignInState extends State<SignIn> {
   var formKey = GlobalKey<FormState>();
   var isLoadingToSignIn = false;
   bool _passwordVisible = false;
-  bool isLoggedIn = false;
+
   var userData = [];
   _login() async {
     setState(() {

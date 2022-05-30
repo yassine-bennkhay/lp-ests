@@ -5,11 +5,13 @@ class License {
   License({
     required this.id,
     required this.name,
+    required this.img,
     required this.description,
   });
   factory License.fromJson(Map<String, dynamic> comingJson) {
     return License(
         id: comingJson['id'],
+        img: "assets/images/hat.png",
         name: comingJson['Intitule'],
         description: comingJson['description']);
   }

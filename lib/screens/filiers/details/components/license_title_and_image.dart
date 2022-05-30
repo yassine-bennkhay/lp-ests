@@ -24,22 +24,6 @@ class LicenseTitleAndImage extends StatelessWidget {
                 .headline4
                 ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-
-          // Row(
-          //   children: const <Widget>[
-          //     // RichText(
-          //     //   text: TextSpan(
-          //     //     children: [
-          //     //       TextSpan(
-          //     //         text: license.name,
-          //     //         style: Theme.of(context).textTheme.headline4?.copyWith(
-          //     //             color: Colors.white, fontWeight: FontWeight.bold),
-          //     //       ),
-          //     //     ],
-          //     //   ),
-          //     // ),
-          //   ],
-          // )
         ],
       ),
     );

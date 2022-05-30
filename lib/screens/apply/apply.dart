@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:lp_ests/constants/constants.dart';
+import 'package:lp_ests/models/form_response.dart';
 
 class Apply extends StatefulWidget {
   const Apply({Key? key}) : super(key: key);
@@ -42,11 +43,13 @@ class _ApplyState extends State<Apply> {
   List diplomes = [];
   List filiers = [];
   List filiersToApplyFor = [];
+  List etablissements = [];
   var _selectedBac;
   var _selectedDiplome;
   var _selectedFiliere;
   var _selectedChoiceOne;
   var _selectedChoiceTwo;
+  var _selectedEtablissement;
   Future fetchAllBacs() async {
     final response =
         await http.get(Uri.parse('http://192.168.0.123:4000/bacs'));
@@ -97,6 +100,120 @@ class _ApplyState extends State<Apply> {
       });
     } else {
       throw Exception("Failed to fetch Filiers to apply for.");
+    }
+  }
+
+  Future fetchEtablissementByDiplomeId(var idDiplome) async {
+    final response = await http
+        .get(Uri.parse('http://192.168.0.123:4000/etablissement/$idDiplome'));
+    if (response.statusCode == 200) {
+      var etablissementData = jsonDecode(response.body);
+      setState(() {
+        etablissements = etablissementData;
+      });
+    } else {
+      throw Exception("Failed to fetch Etablissement");
+    }
+  }
+
+  var isLoadingToSendFormData = false;
+  _sendForm() async {
+    setState(() {
+      isLoadingToSendFormData = true;
+    });
+    var userInputData = {
+      "user": 122,
+      "personelinfos": {
+        "nomFr": "Bennkhay",
+        "prenomFr": "yassine",
+        "nomAr": "test",
+        "prenomAr": "value",
+        "email": "test@test.com",
+        "phone": "0628519259",
+        "cin": "valuevaluevalue",
+        "LieuDeNaissance": "value",
+        "datenaiss": "0001-11-11",
+        "cne": "k1232312"
+      },
+      "address": "value, value, value",
+      "education": {
+        "bac": {"id": 1, "Intitule": "BAC SCIENCES AGRONOMIQUES"},
+        "notebac": 14,
+        "anneebac": 2015,
+        "diplome": {
+          "id": 2,
+          "abreviation": "DUT",
+          "Intitule": "Diplôme Universitaire de Technologie"
+        },
+        "annediplo": 2016,
+        "notediplo": 14,
+        "filC": {
+          "id": 1,
+          "Intitule": "Administrateur de systèmes et Réseaux",
+          "type_diplome": 2
+        },
+        "etablissement": {
+          "id": 1,
+          "Nom": "école supérieure de technologie",
+          "abreviation": "EST",
+          " ville": "Safi"
+        }
+      },
+      "choices": {
+        "filterN1": {
+          "id": 4,
+          "Intitule": "Métiers de l’Informatique",
+          "capaciteMax": 40,
+          "coordonnateur": 1,
+          "Id_Departement": 1
+        },
+        "filterN2": {
+          "id": 3,
+          "Intitule": "Gestion Comptable et Financière",
+          "capaciteMax": 30,
+          "coordonnateur": 4,
+          "Id_Departement": 1
+        }
+      }
+    };
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST', Uri.parse('http://192.168.0.123:4000/candidatData'));
+    request.body = json.encode(userInputData);
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseString = await response.stream.bytesToString();
+      var parsedData = FormResponse.fromJson(jsonDecode(responseString));
+
+      setState(() {
+        isLoadingToSendFormData = false;
+        parsedData.isSuccess
+            ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Color(0xff06113C),
+                content: Text("vous avez bien soumis vos informations"),
+                duration: Duration(seconds: 8),
+              ))
+            : ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Color(0xff06113C),
+                  content: Text(
+                      "Désolé, une erreur s'est produite, vous ne pouvez pas la traiter pour le moment."),
+                  duration: Duration(seconds: 8),
+                ),
+              );
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Color(0xff06113C),
+          content: Text(
+              "Assurez-vous d'avoir une bonne connexion Internet et réessayez!"),
+          duration: Duration(seconds: 8),
+        ),
+      );
     }
   }
 
@@ -390,6 +507,7 @@ class _ApplyState extends State<Apply> {
                           _selectedDiplome = newVal;
                           _selectedFiliere = null;
                           fetchFilierById(_selectedDiplome);
+                          fetchEtablissementByDiplomeId(_selectedDiplome);
                         });
                       },
                       value: _selectedDiplome,
@@ -399,7 +517,7 @@ class _ApplyState extends State<Apply> {
                     ),
 
                     DropdownButton(
-                      hint: const Text("Choisir le type de filiere"),
+                      hint: const Text("Choisir votre filiere"),
                       isExpanded: true,
                       items: filiers.map((item) {
                         return DropdownMenuItem(
@@ -421,6 +539,22 @@ class _ApplyState extends State<Apply> {
                       height: 8,
                     ),
 
+                    DropdownButton(
+                      hint: const Text("Choisir votre etablissement"),
+                      isExpanded: true,
+                      items: etablissements.map((item) {
+                        return DropdownMenuItem(
+                          child: Text(item['Nom']),
+                          value: item['id'].toString(),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedEtablissement = newVal;
+                        });
+                      },
+                      value: _selectedEtablissement,
+                    ),
                     createTextField(
                       'Année d\'obtention du diplôme',
                       TextInputType.number,
@@ -542,17 +676,24 @@ class _ApplyState extends State<Apply> {
                             backgroundColor: kPrimaryColor,
                           ),
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              formKey.currentState!.save();
+                            _sendForm();
+                            // if (formKey.currentState!.validate()) {
+                            //   formKey.currentState!.save();
 
-                              setState(() {});
-                            }
+                            //   setState(() {});
+                            // }
                           },
-                          child: const Center(
-                            child: Text(
-                              "Envoyer mes informations",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          child: Center(
+                            child: isLoadingToSendFormData
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Text(
+                                    "Envoyer mes informations",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
                         ),
                       ],

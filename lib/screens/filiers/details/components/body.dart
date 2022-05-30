@@ -21,29 +21,27 @@ class Body extends StatelessWidget {
             height: size.height,
             child: Stack(
               children: <Widget>[
-                Expanded(
-                  child: Container(
-                      margin: EdgeInsets.only(top: size.height * 0.2),
-                      padding: EdgeInsets.only(
-                        top: size.height * 0.01,
-                        left: kDefaultPaddin,
-                        right: kDefaultPaddin,
+                Container(
+                    margin: EdgeInsets.only(top: size.height * 0.2),
+                    padding: EdgeInsets.only(
+                      top: size.height * 0.01,
+                      left: kDefaultPaddin,
+                      right: kDefaultPaddin,
+                    ),
+                    // height: 500,
+                    decoration: const BoxDecoration(
+                      color: Color(0xffF1F2F7),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
                       ),
-                      // height: 500,
-                      decoration: const BoxDecoration(
-                        color: Color(0xffF1F2F7),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24),
-                        ),
-                      ),
-                      child: ListView(
-                        children: [
-                          //ColorAndSize(license: license),
-                          Description(license: license)
-                        ],
-                      )),
-                ),
+                    ),
+                    child: ListView(
+                      children: [
+                        //ColorAndSize(license: license),
+                        Description(license: license)
+                      ],
+                    )),
                 LicenseTitleAndImage(license: license)
               ],
             ),

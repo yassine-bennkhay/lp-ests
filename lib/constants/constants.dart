@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lp_ests/screens/accueil.dart';
 import 'package:lp_ests/screens/profile/profile_screen.dart';
 
-import '../screens/accueil.dart';
 import '../screens/apply/apply.dart';
 import '../screens/filiers/filiers.dart';
 
@@ -32,4 +32,5 @@ const kTextLightColor = Color(0xFFACACAC);
 const kDefaultPaddin = 20.0;
 
 const kPrimaryColor = Color(0xFF06113C);
-const kInputColor = Color(0xFFF5F6F9);
+const kCardColor = Color(0xFFF5F6F9);
+const kNavBarBackgroundColor = Color(0xffDDDDDD);

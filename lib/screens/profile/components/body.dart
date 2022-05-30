@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lp_ests/constants/constants.dart';
+import 'package:lp_ests/screens/profile/candidature_info/candidat_data.dart';
 import 'package:lp_ests/screens/profile/components/profile_menu.dart';
 import 'package:lp_ests/screens/profile/components/profile_pic.dart';
 import 'package:lp_ests/screens/sign_in/sign_in.dart';
@@ -47,7 +48,12 @@ class Body extends StatelessWidget {
             ),
           ),
           ProfileMenu(
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CandidatData()));
+            },
             text: "Ma candidature ",
             icon: "assets/icons/User Icon.svg",
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lp_ests/constants/constants.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -29,7 +30,7 @@ class ProfilePic extends StatelessWidget {
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
-                    side: const BorderSide(color: Color(0xff06113C)),
+                    side: const BorderSide(color: kPrimaryColor),
                   ),
                   primary: Colors.white,
                   backgroundColor: const Color(0xFFF5F6F9),

@@ -27,7 +27,7 @@ class _SignUpState extends State<SignUp> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.122:4000/accounts/register'));
+        'POST', Uri.parse('http://192.168.0.123:4000/accounts/register'));
     request.body = json.encode({
       "email": emailController.text,
       "password": passController.text,
@@ -177,16 +177,8 @@ class _SignUpState extends State<SignUp> {
                           ? const CircularProgressIndicator(
                               color: Colors.white,
                             )
-                          : const Text("Sign Up"),
+                          : const Text("S'inscrire"),
                     )),
-
-                // SizedBox(height: height * 0.1),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: const [
-
-                //   ],
-                // )
               ],
             ),
           ),

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../../constants/constants.dart';
+import 'package:lp_ests/constants/constants.dart';
 
 class Apply extends StatefulWidget {
   const Apply({Key? key}) : super(key: key);
@@ -15,6 +15,7 @@ class Apply extends StatefulWidget {
 
 class Data {
   List<String> inputs = [
+    '',
     '',
     '',
     '',
@@ -48,7 +49,7 @@ class _ApplyState extends State<Apply> {
   var _selectedChoiceTwo;
   Future fetchAllBacs() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.121:4000/bacs'));
+        await http.get(Uri.parse('http://192.168.0.123:4000/bacs'));
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       setState(() {
@@ -61,7 +62,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.121:4000/diplomes'));
+        await http.get(Uri.parse('http://192.168.0.123:4000/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -74,7 +75,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.121:4000/filsC/$idDiplome'));
+        await http.get(Uri.parse('http://192.168.0.123:4000/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -88,7 +89,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierToApplyForById(var idFilier) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.121:4000/filspourpostuler/$idFilier'));
+        .get(Uri.parse('http://192.168.0.123:4000/filspourpostuler/$idFilier'));
     if (response.statusCode == 200) {
       var filierData = jsonDecode(response.body);
       setState(() {
@@ -178,6 +179,16 @@ class _ApplyState extends State<Apply> {
                     const SizedBox(
                       height: 8,
                     ),
+                    createTextField(
+                      'CNE',
+                      TextInputType.text,
+                      'S\'il vous plaît entrez votre CNE',
+                      6,
+                      TextDirection.ltr,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     //here we will add date of birth
                     TextField(
                       controller:
@@ -248,16 +259,7 @@ class _ApplyState extends State<Apply> {
                       5,
                       TextDirection.ltr,
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    createTextField(
-                      'CNE',
-                      TextInputType.text,
-                      'S\'il vous plaît entrez votre CNE',
-                      6,
-                      TextDirection.ltr,
-                    ),
+
                     const SizedBox(
                       height: 8,
                     ),
@@ -497,7 +499,6 @@ class _ApplyState extends State<Apply> {
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
-                            primary: kPrimaryColor,
                             padding: const EdgeInsets.all(20),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
@@ -535,11 +536,10 @@ class _ApplyState extends State<Apply> {
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
-                            primary: kPrimaryColor,
                             padding: const EdgeInsets.all(20),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
-                            backgroundColor: const Color(0xFF06113C),
+                            backgroundColor: kPrimaryColor,
                           ),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
@@ -566,14 +566,23 @@ class _ApplyState extends State<Apply> {
                     Text('NomAr: ${input.inputs[3]}'),
                     Text('CIN: ${input.inputs[4]}'),
                     Text('CNE: ${input.inputs[5]}'),
-                    Text('Email: ${input.inputs[6]}'),
-                    Text('Ville: ${input.inputs[7]}'),
-                    Text('Telephone: ${input.inputs[8]}'),
-                    Text('Rue: ${input.inputs[9]}'),
-                    Text('code postale: ${input.inputs[10]}'),
                     Text('date de naissance: ${dateinput.text}'),
+                    Text('Lieu de naissance: ${input.inputs[6]}'),
+                    Text('Email: ${input.inputs[7]}'),
+                    Text('Telephone: ${input.inputs[8]}'),
+                    Text('Ville: ${input.inputs[9]}'),
+                    Text('Rue: ${input.inputs[10]}'),
+                    Text('code postale: ${input.inputs[11]}'),
                     Text('bac: $_selectedBac'),
+                    Text('note du bac:${input.inputs[12]}'),
+                    Text('annee du bac:${input.inputs[13]}'),
                     Text('diplome: $_selectedDiplome'),
+                    Text('filiere: $_selectedFiliere'),
+                    Text('annee du diplome:${input.inputs[14]}'),
+                    Text('note du diplome:${input.inputs[15]}'),
+
+                    Text('Choice one: $_selectedChoiceOne'),
+                    Text('choice two: $_selectedChoiceTwo'),
                     const SizedBox(
                       height: 16,
                     ),
@@ -599,13 +608,12 @@ class _ApplyState extends State<Apply> {
           },
           keyboardType: textInputType,
           decoration: InputDecoration(
-              labelStyle: const TextStyle(color: Color(0xff06113C)),
+              labelStyle: const TextStyle(color: kPrimaryColor),
               labelText: labelText,
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Color(0xff06113C), width: 2.0),
+                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
                 borderRadius: BorderRadius.circular(8.0),
               )),
           validator: (text) {

@@ -30,7 +30,7 @@ class _SignInState extends State<SignIn> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.123:4000/accounts/authenticate'));
+        'POST', Uri.parse('http://192.168.0.120:4000/accounts/authenticate'));
     request.body = json.encode(
         {"email": emailController.text, "password": passwordController.text});
     request.headers.addAll(headers);

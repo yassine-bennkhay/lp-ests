@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:lp_ests/constants/constants.dart';
-import 'package:lp_ests/models/form_response.dart';
+import 'package:lp_ests/screens/apply/data.dart';
+import 'package:lp_ests/screens/profile/candidature_info/candidat_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/form_response.dart';
 
 class Apply extends StatefulWidget {
   const Apply({Key? key}) : super(key: key);
 
   @override
   _ApplyState createState() => _ApplyState();
-}
-
-class Data {
-  List<String> inputs = [
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-    ''
-  ];
 }
 
 class _ApplyState extends State<Apply> {
@@ -45,6 +27,7 @@ class _ApplyState extends State<Apply> {
   List filiersToApplyFor = [];
   List etablissements = [];
   var _selectedBac;
+  String? mapString;
   var _selectedDiplome;
   var _selectedFiliere;
   var _selectedChoiceOne;
@@ -52,7 +35,7 @@ class _ApplyState extends State<Apply> {
   var _selectedEtablissement;
   Future fetchAllBacs() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.123:4000/bacs'));
+        await http.get(Uri.parse('http://192.168.0.120:4000/bacs'));
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       setState(() {
@@ -65,7 +48,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.123:4000/diplomes'));
+        await http.get(Uri.parse('http://192.168.0.120:4000/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -78,7 +61,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.123:4000/filsC/$idDiplome'));
+        await http.get(Uri.parse('http://192.168.0.120:4000/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -92,7 +75,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierToApplyForById(var idFilier) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.123:4000/filspourpostuler/$idFilier'));
+        .get(Uri.parse('http://192.168.0.120:4000/filspourpostuler/$idFilier'));
     if (response.statusCode == 200) {
       var filierData = jsonDecode(response.body);
       setState(() {
@@ -105,7 +88,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchEtablissementByDiplomeId(var idDiplome) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.123:4000/etablissement/$idDiplome'));
+        .get(Uri.parse('http://192.168.0.120:4000/etablissement/$idDiplome'));
     if (response.statusCode == 200) {
       var etablissementData = jsonDecode(response.body);
       setState(() {
@@ -116,37 +99,55 @@ class _ApplyState extends State<Apply> {
     }
   }
 
+  void showSnackBarAndNavigate() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      backgroundColor: Color(0xff06113C),
+      content: Text("vous avez bien soumis vos informations"),
+      duration: Duration(seconds: 8),
+    ));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const CandidatData()));
+  }
+
   var isLoadingToSendFormData = false;
   _sendForm() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt("id");
     setState(() {
       isLoadingToSendFormData = true;
     });
+    print(_selectedDiplome);
+    // print(_selectedBac['Intitule']);
     var userInputData = {
-      "user": 122,
+      "user": userId,
       "personelinfos": {
-        "nomFr": "Bennkhay",
-        "prenomFr": "yassine",
-        "nomAr": "test",
-        "prenomAr": "value",
-        "email": "test@test.com",
-        "phone": "0628519259",
-        "cin": "valuevaluevalue",
-        "LieuDeNaissance": "value",
-        "datenaiss": "0001-11-11",
-        "cne": "k1232312"
+        "nomFr": input.inputs[1],
+        "prenomFr": input.inputs[0],
+        "nomAr": input.inputs[3],
+        "prenomAr": input.inputs[2],
+        "email": input.inputs[7],
+        "phone": input.inputs[8],
+        "cin": input.inputs[4],
+        "LieuDeNaissance": input.inputs[6],
+        "datenaiss": dateinput.text,
+        "cne": input.inputs[5]
       },
-      "address": "value, value, value",
+      "address":
+          input.inputs[9] + ", " + input.inputs[10] + ", " + input.inputs[11],
       "education": {
-        "bac": {"id": 1, "Intitule": "BAC SCIENCES AGRONOMIQUES"},
-        "notebac": 14,
-        "anneebac": 2015,
+        "bac": {
+          "id": "${_selectedBac['id']}",
+          "Intitule": "${_selectedBac['Intitule']}"
+        },
+        "notebac": input.inputs[12],
+        "anneebac": input.inputs[13],
         "diplome": {
-          "id": 2,
+          "id": 1,
           "abreviation": "DUT",
           "Intitule": "Diplôme Universitaire de Technologie"
         },
-        "annediplo": 2016,
-        "notediplo": 14,
+        "annediplo": input.inputs[14],
+        "notediplo": input.inputs[15],
         "filC": {
           "id": 1,
           "Intitule": "Administrateur de systèmes et Réseaux",
@@ -178,7 +179,7 @@ class _ApplyState extends State<Apply> {
     };
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.123:4000/candidatData'));
+        'POST', Uri.parse('http://192.168.0.120:4000/candidatData'));
     request.body = json.encode(userInputData);
     request.headers.addAll(headers);
 
@@ -191,11 +192,7 @@ class _ApplyState extends State<Apply> {
       setState(() {
         isLoadingToSendFormData = false;
         parsedData.isSuccess
-            ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                backgroundColor: Color(0xff06113C),
-                content: Text("vous avez bien soumis vos informations"),
-                duration: Duration(seconds: 8),
-              ))
+            ? showSnackBarAndNavigate()
             : ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Color(0xff06113C),
@@ -453,7 +450,7 @@ class _ApplyState extends State<Apply> {
                       items: bacs.map((item) {
                         return DropdownMenuItem(
                           child: Text(item['Intitule']),
-                          value: item['id'].toString(),
+                          value: item,
                         );
                       }).toList(),
                       onChanged: (newVal) {
@@ -496,18 +493,19 @@ class _ApplyState extends State<Apply> {
                     DropdownButton(
                       hint: const Text("Choisir le type de diplome"),
                       isExpanded: true,
-                      items: diplomes.map((item) {
+                      items: diplomes.map((diplomeItem) {
                         return DropdownMenuItem(
-                          child: Text(item['Intitule']),
-                          value: item['id'].toString(),
+                          child: Text(diplomeItem['Intitule']),
+                          value: diplomeItem,
                         );
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
                           _selectedDiplome = newVal;
                           _selectedFiliere = null;
-                          fetchFilierById(_selectedDiplome);
-                          fetchEtablissementByDiplomeId(_selectedDiplome);
+                          print(_selectedDiplome);
+                          fetchFilierById(_selectedDiplome['id']);
+                          // fetchEtablissementByDiplomeId(_selectedDiplome);
                         });
                       },
                       value: _selectedDiplome,
@@ -618,16 +616,6 @@ class _ApplyState extends State<Apply> {
                     ),
                     Column(
                       children: [
-                        // ElevatedButton(
-                        //     style: ElevatedButton.styleFrom(
-                        //       primary: Colors.red,
-                        //     ),
-                        //     onPressed: () {
-                        //       formKey.currentState!.reset();
-
-                        //       setState(() {});
-                        //     },
-                        //     child: const Text('Clear')),
                         const SizedBox(
                           height: 10,
                         ),
@@ -675,13 +663,12 @@ class _ApplyState extends State<Apply> {
                                 borderRadius: BorderRadius.circular(15)),
                             backgroundColor: kPrimaryColor,
                           ),
-                          onPressed: () {
-                            _sendForm();
-                            // if (formKey.currentState!.validate()) {
-                            //   formKey.currentState!.save();
-
-                            //   setState(() {});
-                            // }
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              _sendForm();
+                              setState(() {});
+                            }
                           },
                           child: Center(
                             child: isLoadingToSendFormData
@@ -703,27 +690,27 @@ class _ApplyState extends State<Apply> {
                     ),
                     Text('Prenom: ${input.inputs[0]}'),
                     Text('Nom: ${input.inputs[1]}'),
-                    Text('PrenomAr: ${input.inputs[2]}'),
-                    Text('NomAr: ${input.inputs[3]}'),
-                    Text('CIN: ${input.inputs[4]}'),
-                    Text('CNE: ${input.inputs[5]}'),
-                    Text('date de naissance: ${dateinput.text}'),
-                    Text('Lieu de naissance: ${input.inputs[6]}'),
-                    Text('Email: ${input.inputs[7]}'),
-                    Text('Telephone: ${input.inputs[8]}'),
-                    Text('Ville: ${input.inputs[9]}'),
-                    Text('Rue: ${input.inputs[10]}'),
-                    Text('code postale: ${input.inputs[11]}'),
-                    Text('bac: $_selectedBac'),
-                    Text('note du bac:${input.inputs[12]}'),
-                    Text('annee du bac:${input.inputs[13]}'),
-                    Text('diplome: $_selectedDiplome'),
-                    Text('filiere: $_selectedFiliere'),
-                    Text('annee du diplome:${input.inputs[14]}'),
-                    Text('note du diplome:${input.inputs[15]}'),
+                    // Text('PrenomAr: ${input.inputs[2]}'),
+                    // Text('NomAr: ${input.inputs[3]}'),
+                    // Text('CIN: ${input.inputs[4]}'),
+                    // Text('CNE: ${input.inputs[5]}'),
+                    // Text('date de naissance: ${dateinput.text}'),
+                    // Text('Lieu de naissance: ${input.inputs[6]}'),
+                    // Text('Email: ${input.inputs[7]}'),
+                    // Text('Telephone: ${input.inputs[8]}'),
+                    // Text('Ville: ${input.inputs[9]}'),
+                    // Text('Rue: ${input.inputs[10]}'),
+                    // Text('code postale: ${input.inputs[11]}'),
+                    // Text('bac: $_selectedBac'),
+                    // Text('note du bac:${input.inputs[12]}'),
+                    // Text('annee du bac:${input.inputs[13]}'),
+                    // Text('diplome: $_selectedDiplome'),
+                    // Text('filiere: $_selectedFiliere'),
+                    // Text('annee du diplome:${input.inputs[14]}'),
+                    // Text('note du diplome:${input.inputs[15]}'),
 
-                    Text('Choice one: $_selectedChoiceOne'),
-                    Text('choice two: $_selectedChoiceTwo'),
+                    // Text('Choice one: $_selectedChoiceOne'),
+                    // Text('choice two: $_selectedChoiceTwo'),
                     const SizedBox(
                       height: 16,
                     ),
@@ -757,8 +744,8 @@ class _ApplyState extends State<Apply> {
                 borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
                 borderRadius: BorderRadius.circular(8.0),
               )),
-          validator: (text) {
-            if (text!.isEmpty) {
+          validator: (value) {
+            if (value!.isEmpty) {
               return message;
             } else {
               return null;

@@ -80,9 +80,12 @@ class _SignUpState extends State<SignUp> {
               children: [
                 SizedBox(height: height * 0.1),
                 SizedBox(height: height * 0.1),
-                TextWidget(text: "Criez", fontSize: 26, isUnderLine: false),
                 TextWidget(
-                    text: "votre compte!", fontSize: 26, isUnderLine: false),
+                    text: "Bienvenue!", fontSize: 26, isUnderLine: false),
+                TextWidget(
+                    text: "merci de créer votre compte.",
+                    fontSize: 26,
+                    isUnderLine: false),
                 SizedBox(height: height * 0.1),
                 Form(
                   key: formKey,
@@ -122,7 +125,7 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
-                        textString: "Password",
+                        textString: "Mot de passe",
                         textController: passController,
                         obscureText: _passwordVisible,
                         // onSelectParam: (String) {},
@@ -151,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
-                        textString: "Confirmer votre Password",
+                        textString: "Confirmer votre mot de passe",
                         textController: passController,
                         obscureText: _passwordVisible,
                       ),

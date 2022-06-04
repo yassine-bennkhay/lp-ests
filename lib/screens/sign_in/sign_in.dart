@@ -112,9 +112,9 @@ class _SignInState extends State<SignIn> {
                         }
                         return null;
                       },
-                      textString: "Password",
+                      textString: "Mot de passe",
                       textController: passwordController,
-                      hint: "Password",
+                      hint: "Mot de passe",
                       // onSelectParam: (String) {},
                     ),
                   ]),
@@ -136,7 +136,7 @@ class _SignInState extends State<SignIn> {
                       },
                       child: isLoadingToSignIn
                           ? const CircularProgressIndicator()
-                          : const Text("Sign In"),
+                          : const Text("Connexion"),
                     )),
                 SizedBox(height: height * 0.1),
                 Row(
@@ -150,7 +150,7 @@ class _SignInState extends State<SignIn> {
                                 builder: (context) => const SignUp()));
                       },
                       child: TextWidget(
-                          text: "Sign up", fontSize: 16, isUnderLine: true),
+                          text: "S'inscrire", fontSize: 16, isUnderLine: true),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -160,7 +160,7 @@ class _SignInState extends State<SignIn> {
                                 builder: (context) => const ForgetPassword()));
                       },
                       child: TextWidget(
-                          text: "Forgot Password",
+                          text: "Mot de passe oublié?",
                           fontSize: 16,
                           isUnderLine: true),
                     )

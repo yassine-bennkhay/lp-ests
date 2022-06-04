@@ -142,16 +142,16 @@ class _ApplyState extends State<Apply> {
         "notebac": input.inputs[12],
         "anneebac": input.inputs[13],
         "diplome": {
-          "id": 1,
-          "abreviation": "DUT",
-          "Intitule": "Diplôme Universitaire de Technologie"
+          "id": _selectedDiplome['id'],
+          "abreviation": "${_selectedDiplome['abreviation']}",
+          "Intitule": "${_selectedDiplome['Intitule']}",
         },
         "annediplo": input.inputs[14],
         "notediplo": input.inputs[15],
         "filC": {
-          "id": 1,
-          "Intitule": "Administrateur de systèmes et Réseaux",
-          "type_diplome": 2
+          "id": _selectedFiliere['id'],
+          "Intitule": "${_selectedFiliere['Intitule']}",
+          "type_diplome": _selectedFiliere['type_diplome']
         },
         "etablissement": {
           "id": 1,
@@ -520,15 +520,20 @@ class _ApplyState extends State<Apply> {
                       items: filiers.map((item) {
                         return DropdownMenuItem(
                           child: Text(item['Intitule']),
-                          value: item['id'].toString(),
+                          value: item,
                         );
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
                           _selectedFiliere = newVal;
+                          // print(_selectedFiliere['Intitule']);
+                          // print(_selectedFiliere['id']);
+                          // print(_selectedFiliere['type_diplome']);
+
                           //It should be selectedFilier
                           //but for now we don't have all filiers yet.
-                          fetchFilierToApplyForById(_selectedDiplome);
+                          fetchEtablissementByDiplomeId(_selectedDiplome['id']);
+                          fetchFilierToApplyForById(_selectedDiplome['id']);
                         });
                       },
                       value: _selectedFiliere,
@@ -543,12 +548,13 @@ class _ApplyState extends State<Apply> {
                       items: etablissements.map((item) {
                         return DropdownMenuItem(
                           child: Text(item['Nom']),
-                          value: item['id'].toString(),
+                          value: item,
                         );
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
                           _selectedEtablissement = newVal;
+                          print(_selectedEtablissement);
                         });
                       },
                       value: _selectedEtablissement,

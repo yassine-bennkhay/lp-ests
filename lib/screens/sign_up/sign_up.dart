@@ -27,7 +27,7 @@ class _SignUpState extends State<SignUp> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.124:4000/accounts/register'));
+        'POST', Uri.parse('http://192.168.83.2:4000/accounts/register'));
     request.body = json.encode({
       "email": emailController.text,
       "password": passController.text,

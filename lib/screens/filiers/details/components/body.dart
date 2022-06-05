@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lp_ests/screens/filiers/details/components/license_title_and_image.dart';
+import 'package:lp_ests/screens/filiers/details/components/license_title.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../../models/licenses.dart';
@@ -42,7 +42,7 @@ class Body extends StatelessWidget {
                         Description(license: license)
                       ],
                     )),
-                LicenseTitleAndImage(license: license)
+                LicenseTitle(license: license)
               ],
             ),
           )

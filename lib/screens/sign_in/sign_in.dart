@@ -30,7 +30,7 @@ class _SignInState extends State<SignIn> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.120:4000/accounts/authenticate'));
+        'POST', Uri.parse('http://192.168.83.2:4000/accounts/authenticate'));
     request.body = json.encode(
         {"email": emailController.text, "password": passwordController.text});
     request.headers.addAll(headers);
@@ -50,7 +50,12 @@ class _SignInState extends State<SignIn> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MyHomePage()));
     } else {
-      print("we cant log you in right now!");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        backgroundColor: Color(0xff06113C),
+        content: Text(
+            "L'e-mail ou le mot de passe est incorrect ou l'e-mail n'est pas vérifié. Veuillez vérifier votre e-mail"),
+        duration: Duration(seconds: 8),
+      ));
     }
   }
 

@@ -26,6 +26,7 @@ class _ApplyState extends State<Apply> {
   List filiers = [];
   List filiersToApplyFor = [];
   List etablissements = [];
+  List userId = [];
   var _selectedBac;
   String? mapString;
   var _selectedDiplome;
@@ -34,21 +35,20 @@ class _ApplyState extends State<Apply> {
   var _selectedChoiceTwo;
   var _selectedEtablissement;
   Future fetchAllBacs() async {
-    final response =
-        await http.get(Uri.parse('http://192.168.0.120:4000/bacs'));
+    final response = await http.get(Uri.parse('http://192.168.83.2:4000/bacs'));
     if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
+      var jsonUserData = jsonDecode(response.body);
       setState(() {
-        bacs = jsonData;
+        bacs = jsonUserData;
       });
     } else {
-      throw Exception('Failed to fetch bacs');
+      throw Exception('Failed to fetch user number of candidat');
     }
   }
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.120:4000/diplomes'));
+        await http.get(Uri.parse('http://192.168.83.2:4000/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -61,7 +61,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.0.120:4000/filsC/$idDiplome'));
+        await http.get(Uri.parse('http://192.168.83.2:4000/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -75,7 +75,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierToApplyForById(var idFilier) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.120:4000/filspourpostuler/$idFilier'));
+        .get(Uri.parse('http://192.168.83.2:4000/filspourpostuler/$idFilier'));
     if (response.statusCode == 200) {
       var filierData = jsonDecode(response.body);
       setState(() {
@@ -86,9 +86,9 @@ class _ApplyState extends State<Apply> {
     }
   }
 
-  Future fetchEtablissementByDiplomeId(var idDiplome) async {
+  Future fetchEtablissementByDiplomeId(idDiplome) async {
     final response = await http
-        .get(Uri.parse('http://192.168.0.120:4000/etablissement/$idDiplome'));
+        .get(Uri.parse('http://192.168.83.2:4000/etablissement/$idDiplome'));
     if (response.statusCode == 200) {
       var etablissementData = jsonDecode(response.body);
       setState(() {
@@ -109,6 +109,23 @@ class _ApplyState extends State<Apply> {
         context, MaterialPageRoute(builder: (context) => const CandidatData()));
   }
 
+  Future getNumberOfcandidatures() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var userIdf = sharedPreferences.getInt('id');
+
+    final response = await http
+        .get(Uri.parse('http://192.168.83.2:4000/candidatData/$userIdf'));
+    if (response.statusCode == 200) {
+      var userIdData = jsonDecode(response.body);
+      setState(() {
+        userId = userIdData;
+      });
+      print(userId[0]['numberOfcandidatures']);
+    } else {
+      throw Exception("failed to fetch user id");
+    }
+  }
+
   var isLoadingToSendFormData = false;
   _sendForm() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -117,7 +134,7 @@ class _ApplyState extends State<Apply> {
       isLoadingToSendFormData = true;
     });
     print(_selectedDiplome);
-    // print(_selectedBac['Intitule']);
+
     var userInputData = {
       "user": userId,
       "personelinfos": {
@@ -154,32 +171,34 @@ class _ApplyState extends State<Apply> {
           "type_diplome": _selectedFiliere['type_diplome']
         },
         "etablissement": {
-          "id": 1,
-          "Nom": "école supérieure de technologie",
-          "abreviation": "EST",
-          " ville": "Safi"
+          "id": _selectedEtablissement['id'],
+          "Nom": "${_selectedEtablissement['Nom']}",
+          "abreviation": "${_selectedEtablissement['abreviation']}",
+          " ville": "${_selectedEtablissement['ville']}"
         }
       },
       "choices": {
         "filterN1": {
-          "id": 4,
-          "Intitule": "Métiers de l’Informatique",
-          "capaciteMax": 40,
-          "coordonnateur": 1,
-          "Id_Departement": 1
+          "id": _selectedChoiceOne['id'],
+          "Intitule": "${_selectedChoiceOne['Intitule']}",
+          "description": "${_selectedChoiceOne['description']}",
+          "capaciteMax": _selectedChoiceOne['capaciteMax'],
+          "coordonnateur": _selectedChoiceOne['coordonnateur'],
+          "Id_Departement": _selectedChoiceOne['Id_Departement'],
         },
         "filterN2": {
-          "id": 3,
-          "Intitule": "Gestion Comptable et Financière",
-          "capaciteMax": 30,
-          "coordonnateur": 4,
-          "Id_Departement": 1
+          "id": _selectedChoiceTwo['id'],
+          "Intitule": "${_selectedChoiceTwo['Intitule']}",
+          "description": "${_selectedChoiceTwo['description']}",
+          "capaciteMax": _selectedChoiceTwo['capaciteMax'],
+          "coordonnateur": _selectedChoiceTwo['coordonnateur'],
+          "Id_Departement": _selectedChoiceTwo['Id_Departement']
         }
       }
     };
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.0.120:4000/candidatData'));
+        'POST', Uri.parse('http://192.168.83.2:4000/candidatData'));
     request.body = json.encode(userInputData);
     request.headers.addAll(headers);
 
@@ -220,6 +239,7 @@ class _ApplyState extends State<Apply> {
     super.initState();
     fetchAllBacs();
     fetchAllDiplomes();
+    getNumberOfcandidatures();
   }
 
   @override
@@ -503,9 +523,11 @@ class _ApplyState extends State<Apply> {
                         setState(() {
                           _selectedDiplome = newVal;
                           _selectedFiliere = null;
-                          print(_selectedDiplome);
+                          _selectedEtablissement = null;
+                          //     print(_selectedFiliere);
+                          // print(_selectedDiplome['id']);
                           fetchFilierById(_selectedDiplome['id']);
-                          // fetchEtablissementByDiplomeId(_selectedDiplome);
+                          fetchEtablissementByDiplomeId(_selectedDiplome['id']);
                         });
                       },
                       value: _selectedDiplome,
@@ -532,8 +554,9 @@ class _ApplyState extends State<Apply> {
 
                           //It should be selectedFilier
                           //but for now we don't have all filiers yet.
-                          fetchEtablissementByDiplomeId(_selectedDiplome['id']);
+                          //fetchEtablissementByDiplomeId(_selectedDiplome['id']);
                           fetchFilierToApplyForById(_selectedDiplome['id']);
+                          // print(_selectedDiplome['id']);
                         });
                       },
                       value: _selectedFiliere,
@@ -555,6 +578,8 @@ class _ApplyState extends State<Apply> {
                         setState(() {
                           _selectedEtablissement = newVal;
                           print(_selectedEtablissement);
+                          print(_selectedFiliere);
+                          print(_selectedDiplome);
                         });
                       },
                       value: _selectedEtablissement,
@@ -594,12 +619,13 @@ class _ApplyState extends State<Apply> {
                       items: filiersToApplyFor.map((item) {
                         return DropdownMenuItem(
                           child: Text(item['Intitule']),
-                          value: item['id'].toString(),
+                          value: item,
                         );
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
                           _selectedChoiceOne = newVal;
+                          print(_selectedChoiceOne);
                         });
                       },
                       value: _selectedChoiceOne,
@@ -610,12 +636,13 @@ class _ApplyState extends State<Apply> {
                       items: filiersToApplyFor.map((item) {
                         return DropdownMenuItem(
                           child: Text(item['Intitule']),
-                          value: item['id'].toString(),
+                          value: item,
                         );
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
                           _selectedChoiceTwo = newVal;
+                          print(_selectedChoiceTwo);
                         });
                       },
                       value: _selectedChoiceTwo,
@@ -672,7 +699,29 @@ class _ApplyState extends State<Apply> {
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               formKey.currentState!.save();
-                              _sendForm();
+                              //
+                              if (userId[0]['numberOfcandidatures'] < 1) {
+                                _sendForm();
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Attention!"),
+                                      content: const Text(
+                                          "vous n'avez le droit de postuler que deux fois"),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          child: const Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                               setState(() {});
                             }
                           },
@@ -694,8 +743,8 @@ class _ApplyState extends State<Apply> {
                     const SizedBox(
                       height: 16,
                     ),
-                    Text('Prenom: ${input.inputs[0]}'),
-                    Text('Nom: ${input.inputs[1]}'),
+                    // Text('Prenom: ${input.inputs[0]}'),
+                    // Text('Nom: ${input.inputs[1]}'),
                     // Text('PrenomAr: ${input.inputs[2]}'),
                     // Text('NomAr: ${input.inputs[3]}'),
                     // Text('CIN: ${input.inputs[4]}'),

@@ -3,8 +3,8 @@ import 'package:lp_ests/models/licenses.dart';
 
 import '../../../../constants/constants.dart';
 
-class LicenseTitleAndImage extends StatelessWidget {
-  const LicenseTitleAndImage({
+class LicenseTitle extends StatelessWidget {
+  const LicenseTitle({
     required this.license,
   });
 

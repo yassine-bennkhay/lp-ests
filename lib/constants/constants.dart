@@ -33,4 +33,5 @@ const kDefaultPaddin = 20.0;
 
 const kPrimaryColor = Color(0xFF06113C);
 const kCardColor = Color(0xFFF5F6F9);
+const kHomeCardColor = Color(0xFF585E6E);
 const kNavBarBackgroundColor = Color(0xffDDDDDD);

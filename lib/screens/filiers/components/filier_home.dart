@@ -16,8 +16,7 @@ List licenses = [];
 
 class _FilierHomeState extends State<FilierHome> {
   Future fetchAllLicenses() async {
-    final response =
-        await http.get(Uri.parse('http://192.168.0.120:4000/fils'));
+    final response = await http.get(Uri.parse('http://192.168.83.2:4000/fils'));
     if (response.statusCode == 200) {
       var licenseData = LicenseList.fromJson(jsonDecode(response.body));
       return licenseData.licenses;

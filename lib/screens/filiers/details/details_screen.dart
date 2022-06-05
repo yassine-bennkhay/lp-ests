@@ -11,7 +11,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff5584F1),
+      backgroundColor: kPrimaryColor,
       appBar: buildAppBar(context),
       body: Body(license: license),
     );
@@ -20,15 +20,8 @@ class DetailsScreen extends StatelessWidget {
   AppBar buildAppBar(BuildContext context) {
     var kDefaultPaddin2 = kDefaultPaddin;
     return AppBar(
-      backgroundColor: const Color(0xff5584F1),
+      backgroundColor: kPrimaryColor,
       elevation: 0,
-      // leading: IconButton(
-      //   icon: SvgPicture.asset(
-      //     'assets/icons/back.svg',
-      //     color: Colors.white,
-      //   ),
-      //   onPressed: () => Navigator.pop(context),
-      // ),
     );
   }
 }

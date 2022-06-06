@@ -6,10 +6,9 @@ import 'package:lp_ests/screens/home_page.dart';
 import 'package:lp_ests/screens/sign_up/sign_up.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import '../../constants/constants.dart';
 import './components/text_widget.dart';
 
-// import '../singup_login/sing_up.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -30,7 +29,7 @@ class _SignInState extends State<SignIn> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.83.2:4000/accounts/authenticate'));
+        'POST', Uri.parse(baseUrl+'/accounts/authenticate'));
     request.body = json.encode(
         {"email": emailController.text, "password": passwordController.text});
     request.headers.addAll(headers);

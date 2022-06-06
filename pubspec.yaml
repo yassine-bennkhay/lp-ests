@@ -9,13 +9,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_countdown_timer:
+    git: https://github.com/yassine-bennkhay/FlutterCountdownTimer
   font_awesome_flutter: ^10.1.0
   google_nav_bar: ^5.0.6
   http: ^0.13.4
   intl: ^0.17.0
   flutter_svg: ^1.1.0
   shared_preferences: ^2.0.15
-  flutter_countdown_timer: ^4.1.0
+#  flutter_countdown_timer: ^4.1.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0
@@ -24,7 +26,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/hat.png
+    - assets/images/
     - assets/icons/
    
   fonts:

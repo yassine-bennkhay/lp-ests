@@ -25,7 +25,7 @@ List<Text> text = [
     'Profile',
   ),
 ];
-
+const baseUrl='http://192.168.83.2:4000';
 const kTextColor = Color(0xFF535353);
 const kTextLightColor = Color(0xFFACACAC);
 

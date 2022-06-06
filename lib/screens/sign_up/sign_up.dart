@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../constants/constants.dart';
 import '../sign_in/components/text_widget.dart';
 
 class SignUp extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SignUpState extends State<SignUp> {
     });
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.83.2:4000/accounts/register'));
+        'POST', Uri.parse(baseUrl+'/accounts/register'));
     request.body = json.encode({
       "email": emailController.text,
       "password": passController.text,

@@ -35,7 +35,7 @@ class _ApplyState extends State<Apply> {
   var _selectedChoiceTwo;
   var _selectedEtablissement;
   Future fetchAllBacs() async {
-    final response = await http.get(Uri.parse('http://192.168.83.2:4000/bacs'));
+    final response = await http.get(Uri.parse(baseUrl+'/bacs'));
     if (response.statusCode == 200) {
       var jsonUserData = jsonDecode(response.body);
       setState(() {
@@ -48,7 +48,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchAllDiplomes() async {
     final response =
-        await http.get(Uri.parse('http://192.168.83.2:4000/diplomes'));
+        await http.get(Uri.parse(baseUrl+'/diplomes'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -61,7 +61,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierById(var idDiplome) async {
     final response =
-        await http.get(Uri.parse('http://192.168.83.2:4000/filsC/$idDiplome'));
+        await http.get(Uri.parse(baseUrl+'/filsC/$idDiplome'));
     if (response.statusCode == 200) {
       var diplomesData = jsonDecode(response.body);
       setState(() {
@@ -75,7 +75,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchFilierToApplyForById(var idFilier) async {
     final response = await http
-        .get(Uri.parse('http://192.168.83.2:4000/filspourpostuler/$idFilier'));
+        .get(Uri.parse(baseUrl+'/filspourpostuler/$idFilier'));
     if (response.statusCode == 200) {
       var filierData = jsonDecode(response.body);
       setState(() {
@@ -88,7 +88,7 @@ class _ApplyState extends State<Apply> {
 
   Future fetchEtablissementByDiplomeId(idDiplome) async {
     final response = await http
-        .get(Uri.parse('http://192.168.83.2:4000/etablissement/$idDiplome'));
+        .get(Uri.parse(baseUrl+'/etablissement/$idDiplome'));
     if (response.statusCode == 200) {
       var etablissementData = jsonDecode(response.body);
       setState(() {
@@ -114,7 +114,7 @@ class _ApplyState extends State<Apply> {
     var userIdf = sharedPreferences.getInt('id');
 
     final response = await http
-        .get(Uri.parse('http://192.168.83.2:4000/candidatData/$userIdf'));
+        .get(Uri.parse(baseUrl+'/candidatData/$userIdf'));
     if (response.statusCode == 200) {
       var userIdData = jsonDecode(response.body);
       setState(() {
@@ -198,7 +198,7 @@ class _ApplyState extends State<Apply> {
     };
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST', Uri.parse('http://192.168.83.2:4000/candidatData'));
+        'POST', Uri.parse(baseUrl+'/candidatData'));
     request.body = json.encode(userInputData);
     request.headers.addAll(headers);
 

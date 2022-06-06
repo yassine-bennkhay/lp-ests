@@ -79,9 +79,11 @@ packages:
   flutter_countdown_timer:
     dependency: "direct main"
     description:
-      name: flutter_countdown_timer
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "536d32081e7848b9160d0bd5ec879797b3c4e1b8"
+      url: "https://github.com/yassine-bennkhay/FlutterCountdownTimer"
+    source: git
     version: "4.1.0"
   flutter_lints:
     dependency: "direct dev"
